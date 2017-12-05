@@ -42,10 +42,10 @@ def train(bot, update):
         direction =  msg[2]
 
     #Attributes are case sensitive - account for that
-    if direction == "northbound":
+    if direction == "northbound" or direction.lower() == "north" or direction.lower() == "n":
             direction = "Northbound"
 
-    if direction == "southbound":
+    if direction == "southbound" or direction.lower() == "south" or direction.lower() == "s":
             direction = "Southbound"
 
     url = 'http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc={0}'.format(sname)
