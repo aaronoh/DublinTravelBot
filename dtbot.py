@@ -1,10 +1,14 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, BaseFilter
 import logging,requests, xmltodict, json
+from tracery_demo import greeting
 
 #Keep track of calls
 i = 0
 #Global var for station name - used by train and showme
 myStation = "";
+
+#Keep track of station pos
+cur = 0
 
 #Filter messages for 'train'
 class FilterTrain(BaseFilter):
@@ -12,8 +16,13 @@ class FilterTrain(BaseFilter):
         return 'train' in message.text.lower()
         #any(text.lower() in message.text.lower() for text in ('Foo', 'Bar'))
 
+# class FilterGreeting(BaseFilter):
+#     def filter(self, message):
+#         return 'hi', 'hey', 'hello' in message.text.lower()
+
 # Initialize filter class.
 filter_train = FilterTrain()
+#filter_greeting = FilterGreeting()
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -56,15 +65,20 @@ def train(bot, update):
     jsonobj = json.loads(jsonstr)
 
     # For every object in the json obj
+    trains = []
     for attrs in jsonobj["ArrayOfObjStationData"]["objStationData"]:
         #if the direction matches the requested direction
         if attrs['Direction'] == direction:
-            # Pull out specific elements of the jsonobj
-            dueIn = (attrs["Duein"])
-            stationName = (attrs["Stationfullname"])
-            destination = (attrs["Destination"])
-            dir = (attrs["Direction"])
-            break
+            #if the trains match the searched direction, add them to an array
+            trains.append(attrs)
+
+    # Pull out specific elements of the first element in the array - reqorked to use this array to allow the user to search for additional trains servicing the same station
+    #e.g Train due in 2 mins, user may be more interested in the next train - Show them [1] instead of [0]
+    dueIn = (trains[0]['Duein'])
+    stationName = (trains[0]["Stationfullname"])
+    destination = (trains[0]["Destination"])
+    dir = (trains[0]["Direction"])
+
 
     #Return worthwhile string to user
     update.message.reply_text("The next {0} train to service the {1} station is heading for {2}, it's due in {3} minutes.".format(dir, stationName, destination, dueIn))
@@ -103,7 +117,7 @@ def showme(bot, update):
             #Once its' matched one, break out of the for loop
             break
     #Return a worhtwhile string to the user using the above information
-    update.message.reply_text("See map below for directions to the {0} station".format(myStation, ))
+    update.message.reply_text("See map below for directions to the {0} station.".format(myStation))
 
     #Send a map to the user - retrieve the chat id from the original function call and use the lat/lng vars set above
     bot.sendLocation(update.effective_chat.id, latitude=lat, longitude=long);
@@ -125,6 +139,7 @@ def liststations(bot, update):
     update.message.reply_text("Here is a list of all stations currently operating DART services: {0}".format(list_of_stations))
     update.message.reply_text("To view live availability information for any of these stops simply type 'Train', the name of the station and the direction. For example,  Train Sandymount northbound")
 
+
 def echo(bot, update):
     update.message.reply_text(update.message.text)
 
@@ -139,13 +154,12 @@ def main():
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
-
-    # when a message triggers the filter_train, run the train function
-    dp.add_handler(MessageHandler(filter_train, train))
     # when a message contains a defined command (/showme, /thanks, run the thanks/showme function)
     dp.add_handler(CommandHandler("showme", showme))
     dp.add_handler(CommandHandler("list", liststations))
-
+    dp.add_handler(CommandHandler("start", greeting))
+    # when a message triggers the filter_train, run the train function
+    dp.add_handler(MessageHandler(filter_train, train))
     # test handler - when a message that contains text is received - trigger the echo function
     dp.add_handler(MessageHandler(Filters.text, echo))
     

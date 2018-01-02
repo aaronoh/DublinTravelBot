@@ -1,6 +1,7 @@
-from nltk.corpus import twitter_samples
+import nltk
+from nltk.tokenize import PunktSentenceTokenizer
+from nltk.corpus import twitter_samples, state_union
 from nltk.tag import pos_tag_sents
-
 
 tweets = twitter_samples.strings('positive_tweets.json')
 
@@ -25,8 +26,46 @@ for tweet in tweets_tagged:
         elif tag == 'NN':
             NN_count += 1
 
-print('Tweet ', tweets[0])
-print('Tokenized Tweet ', tweets_tokens[0])
-print('Tagged Tweet ',tweets_tagged[0])
-print('Total number of adjectives = ', JJ_count)
-print('Total number of singular nouns = ', NN_count)
+#print('Tweet ', tweets[1])
+#print('Tokenized Tweet ', tweets_tokens[1])
+#print('Tagged Tweet ',tweets_tagged[1])
+#print('Total number of adjectives = ', JJ_count)
+#print('Total number of singular nouns = ', NN_count)
+
+
+
+train_text = state_union.raw("2005-GWBush.txt")
+sample_text = state_union.raw("2006-GWBush.txt")
+#Split text into sentences
+custom_sent_tokenizer = PunktSentenceTokenizer(train_text)
+#tokenize slit text
+tokenized = custom_sent_tokenizer.tokenize(sample_text)
+
+def process_content():
+    try:
+        # for each sentence
+        for i in tokenized:
+            # Tokenization = breaking into words
+            words = nltk.word_tokenize(i)
+            print('Tokenized: ', words)
+            #part-of-speech tagging - e.g JJ = ADJ, NN = Singular Noun, NS = Plural Noun NNP = Proper Noun
+            tagged = nltk.pos_tag(words)
+            print('Tagged: ',tagged)
+            #mach pos tagged data with named entities 
+            namedEnt = nltk.ne_chunk(tagged)
+            namedEnt.draw()
+            print(namedEnt)
+    except Exception as e:
+        print(str(e))
+
+
+process_content()
+
+#https://github.com/arop/ner-re-pt/wiki/NLTK
+#http://norvig.com/spell-correct.html
+#https://www.digitalocean.com/community/tutorials/how-to-work-with-language-data-in-python-3-using-the-natural-language-toolkit-nltk
+#https://pythonprogramming.net/
+#http://www.nltk.org/book/ch06.html
+
+#wtf engine, tracery 
+
