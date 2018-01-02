@@ -67,11 +67,13 @@ def train(bot, update):
 
     # For every object in the json obj
     global trains
+    trains = []
     for attrs in jsonobj["ArrayOfObjStationData"]["objStationData"]:
         #if the direction matches the requested direction
         if attrs['Direction'] == direction:
             #if the trains match the searched direction, add them to an array
             trains.append(attrs)
+            print(trains)
 
     # Pull out specific elements of the first element in the array - reqorked to use this array to allow the user to search for additional trains servicing the same station
     #e.g Train due in 2 mins, user may be more interested in the next train - Show them [1] instead of [0]
