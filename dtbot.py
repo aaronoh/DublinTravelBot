@@ -8,7 +8,7 @@ i = 0
 myStation = "";
 
 #Keep track of station pos
-cur = 0
+trains = []
 
 #Filter messages for 'train'
 class FilterTrain(BaseFilter):
@@ -16,13 +16,13 @@ class FilterTrain(BaseFilter):
         return 'train' in message.text.lower()
         #any(text.lower() in message.text.lower() for text in ('Foo', 'Bar'))
 
-# class FilterGreeting(BaseFilter):
-#     def filter(self, message):
-#         return 'hi', 'hey', 'hello' in message.text.lower()
+class FilterNext(BaseFilter):
+    def filter(self, message):
+        return 'next', 'after', 'more' in message.text.lower()
 
 # Initialize filter class.
 filter_train = FilterTrain()
-#filter_greeting = FilterGreeting()
+filter_next = FilterNext()
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -33,7 +33,8 @@ logger = logging.getLogger(__name__)
 
 # Pull stations from api, parse into json, construct string of relevant info, return to user
 def train(bot, update):
-
+    global i
+    i = 0
     #This works assuming the user inputs 'Train StationName Direction'
     #Splitting message into elements - message assumes 'train - stationName - Direction' format, meaning [1] would be the station name & [2] the direction.
     #If/else - really messy way of dealing with multiple word station names
@@ -65,7 +66,7 @@ def train(bot, update):
     jsonobj = json.loads(jsonstr)
 
     # For every object in the json obj
-    trains = []
+    global trains
     for attrs in jsonobj["ArrayOfObjStationData"]["objStationData"]:
         #if the direction matches the requested direction
         if attrs['Direction'] == direction:
@@ -84,16 +85,22 @@ def train(bot, update):
     update.message.reply_text("The next {0} train to service the {1} station is heading for {2}, it's due in {3} minutes.".format(dir, stationName, destination, dueIn))
 
     print(update.message.text)
-    #Keeping track of the number of times train has been called
-    global i
-    i += 1
-    print("This has been called" , i , "times.")
+
 
     #Setting global var station name to the name of the station just searched for
     global myStation
     myStation= (jsonobj["ArrayOfObjStationData"]["objStationData"][1]["Stationfullname"])
 
+def nextTrain(bot, update):
+    global i
+    i += 1
+    dueIn = (trains[i]['Duein'])
+    stationName = (trains[i]["Stationfullname"])
+    destination = (trains[i]["Destination"])
+    dir = (trains[i]["Direction"])
 
+    # Return worthwhile string to user
+    update.message.reply_text("A {0} train will service the {1} station in {2} minutes it's heading for {3}. {4} train(s) will service the station before this.".format(dir,stationName,dueIn,destination,i))
 
 def showme(bot, update):
     #retrieves global station name
@@ -161,6 +168,7 @@ def main():
     # when a message triggers the filter_train, run the train function
     dp.add_handler(MessageHandler(filter_train, train))
     # test handler - when a message that contains text is received - trigger the echo function
+    dp.add_handler(MessageHandler(filter_next, nextTrain))
     dp.add_handler(MessageHandler(Filters.text, echo))
     
 

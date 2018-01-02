@@ -18,7 +18,11 @@ def greeting(bot, update):
 
     x = realGreet('greet')
 
-    greeting_message = "{0} {1}. Welcome to DublinTravelBot. Use /list to view a all active stations, type 'trainStationName Direction' to view live availability information and use" \
-               "/showme to get directions to your chosen station.".format(x,str(update.message.from_user.username))
+    greeting_message = "{0} {1}. Welcome to DublinTravelBot. Use /list to view all active stations.".format(x,str(update.message.from_user.username))
 
     update.message.reply_text(greeting_message)
+    update.message.reply_text("Type 'train StationName Direction' to view live availability information. e.g. Train Glenageary S.")
+    update.message.reply_text("You can use 'next' to conduct further searches on the same station, this will show you the next train that meets your search criteria.")
+    update.message.reply_text("Soutbound destinations include Bray & Greystones, Northbound destinations include Howth & Malahide")
+    update.message.reply_text("Use /showme to get directions to your chosen station.")
+    update.message.reply_text("Use /start to see this information again")
