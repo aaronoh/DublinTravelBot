@@ -1,6 +1,7 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, BaseFilter
 import logging,requests, xmltodict, json
 from tracery_demo import greeting
+import nltk
 
 #Keep track of calls
 i = 0
@@ -10,6 +11,11 @@ myStation = "";
 #Keep track of station pos
 trains = []
 
+#Array of station names for spell check
+stations = ['malahide', 'portmarnock', 'clongriffin', 'sutton', 'bayside', 'howth junction', 'howth', 'kilbarrack', 'raheny', 'harmonstown', 'killester', 'clontarf road', 'dublin connolly',
+            'tara street', 'dublin pearse', 'grand canal dock', 'lansdowne road', 'sandymount', 'sydney parade', 'booterstown', 'blackrock', 'seapoint', 'salthill', 'dun laoghaire',
+            'sandycove', 'glenageary', 'dalkey', 'killiney', 'shankill', 'bray', 'greystones', 'kilcoole']
+
 #Filter messages for 'train'
 class FilterTrain(BaseFilter):
     def filter(self, message):
@@ -18,7 +24,7 @@ class FilterTrain(BaseFilter):
 
 class FilterNext(BaseFilter):
     def filter(self, message):
-        return 'next', 'after', 'more' in message.text.lower()
+        return 'next' in message.text.lower()
 
 # Initialize filter class.
 filter_train = FilterTrain()
@@ -51,6 +57,20 @@ def train(bot, update):
         sname = msg[1]
         direction =  msg[2]
 
+    #for each station in the stations array defined above, get the  Levenshtein edit-distance between the users entry and the recorded station names
+    #if that difference is less than 4 characters, reassign - else leave it as it is (for now)
+    for station in stations:
+        diff = nltk.edit_distance(sname, station)
+        if diff < 4:
+            print('************************************************')
+            print('Original: {0}  New: {1}'.format(sname, station))
+            print('{0} typed {1}'.format(str(update.message.from_user.username), str(update.message.text)))
+            print('************************************************')
+            sname = station
+
+        else:
+            print('Difference between {0} and {1} is: {2}'.format(sname, station, diff))
+
     #Attributes are case sensitive - account for that
     if direction == "northbound" or direction.lower() == "north" or direction.lower() == "n":
             direction = "Northbound"
@@ -73,7 +93,6 @@ def train(bot, update):
         if attrs['Direction'] == direction:
             #if the trains match the searched direction, add them to an array
             trains.append(attrs)
-            print(trains)
 
     # Pull out specific elements of the first element in the array - reqorked to use this array to allow the user to search for additional trains servicing the same station
     #e.g Train due in 2 mins, user may be more interested in the next train - Show them [1] instead of [0]
@@ -85,9 +104,6 @@ def train(bot, update):
 
     #Return worthwhile string to user
     update.message.reply_text("The next {0} train to service the {1} station is heading for {2}, it's due in {3} minutes.".format(dir, stationName, destination, dueIn))
-
-    print(update.message.text)
-
 
     #Setting global var station name to the name of the station just searched for
     global myStation
@@ -151,6 +167,9 @@ def liststations(bot, update):
 
 def echo(bot, update):
     update.message.reply_text(update.message.text)
+    print('************************************************')
+    print('{0} typed {1}'.format(str(update.message.from_user.username), str(update.message.text)))
+    print('************************************************')
 
 
 def error(bot, update, error):
