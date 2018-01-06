@@ -39,6 +39,7 @@ logger = logging.getLogger(__name__)
 
 # Pull stations from api, parse into json, construct string of relevant info, return to user
 def train(bot, update):
+    #reset the 'nextTrain' global var to 0
     global i
     i = 0
     #This works assuming the user inputs 'Train StationName Direction'
@@ -59,6 +60,9 @@ def train(bot, update):
 
     #for each station in the stations array defined above, get the  Levenshtein edit-distance between the users entry and the recorded station names
     #if that difference is less than 4 characters, reassign - else leave it as it is (for now)
+
+    #var used to verify that the station could be found using Levenshtein edit-distance
+    newStationName = ""
     for station in stations:
         diff = nltk.edit_distance(sname, station)
         if diff < 4:
@@ -66,10 +70,17 @@ def train(bot, update):
             print('Original: {0}  New: {1}'.format(sname, station))
             print('{0} typed {1}'.format(str(update.message.from_user.username), str(update.message.text)))
             print('************************************************')
-            sname = station
+            newStationName = station
 
         else:
-            print('Difference between {0} and {1} is: {2}'.format(sname, station, diff))
+            print('Difference between {0} and {1} is: {2}'.format(newStationName, station, diff))
+
+    #if the station isnt found using Levenshtein edit-distance, notify the user that the station could not be found:
+    if newStationName =="":
+        print('Station not found')
+        update.message.reply_text('The {0} station could not be found. Please use /list to view a list of active stations.'.format(sname))
+        return
+
 
     #Attributes are case sensitive - account for that
     if direction == "northbound" or direction.lower() == "north" or direction.lower() == "n":
@@ -78,37 +89,47 @@ def train(bot, update):
     if direction == "southbound" or direction.lower() == "south" or direction.lower() == "s":
             direction = "Southbound"
 
-    url = 'http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc={0}'.format(sname)
+    url = 'http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc={0}'.format(newStationName)
     #xml -> dict -> json str -> json obj
     xml = requests.get(url)
     dict = xmltodict.parse(xml.content)
     jsonstr = json.dumps(dict)
     jsonobj = json.loads(jsonstr)
 
-    # For every object in the json obj
+    #global array, set to empty at each call (new search)
     global trains
     trains = []
-    print(jsonobj)
+
     try:
+        # For every object in the json obj
         for attrs in jsonobj["ArrayOfObjStationData"]["objStationData"]:
             #if the direction matches the requested direction
             if attrs['Direction'] == direction:
-                #if the trains match the searched direction, add them to an array
+                #add the trains to an array
                 trains.append(attrs)
 
-                # Pull out specific elements of the first element in the array - reqorked to use this array to allow the user to search for additional trains servicing the same station
-                #e.g Train due in 2 mins, user may be more interested in the next train - Show them [1] instead of [0]
-                dueIn = (trains[0]['Duein'])
-                stationName = (trains[0]["Stationfullname"])
-                destination = (trains[0]["Destination"])
-                dir = (trains[0]["Direction"])
-                # Return worthwhile string to user
-                update.message.reply_text("The next {0} train to service the {1} station is heading for {2}, it's due in {3} minutes.".format(dir,stationName,destination,dueIn))
-                return;
+        # Pull out specific elements of the first element in the array - reqorked to use this array to allow the user to search for additional trains servicing the same station
+        #e.g Train due in 2 mins, user may be more interested in the next train - Show them [1] instead of [0]
+        dueIn = (trains[0]['Duein'])
+        stationName = (trains[0]["Stationfullname"])
+        destination = (trains[0]["Destination"])
+        dir = (trains[0]["Direction"])
 
-            else:
-                update.message.reply_text("There are no trains travelling {0} due at the {1} station within the next 90 minutes, or the {1} station cannot be found. Please try again later. ".format(direction, sname))
-                return;
+        # Return worthwhile string to user
+        update.message.reply_text("The next {0} train to service the {1} station is heading for {2}, it's due in {3} minutes.".format(dir,stationName,destination,dueIn))
+
+        # Setting global var station name to the name of the station just searched for
+        global myStation
+        myStation = (jsonobj["ArrayOfObjStationData"]["objStationData"][1]["Stationfullname"])
+
+        # Yes? No? MAybe? I don't know - test when stations closed
+        if not trains:
+            print(trains)
+            update.message.reply_text(
+                "There are no trains travelling {0} due at the {1} station within the next 90 minutes, or the {1} station cannot be found. Please try again later. ".format(
+                    direction, sname))
+            return;
+
 
     except:
         update.message.reply_text("There are no trains travelling {0} due at the {1} station within the next 90 minutes, or the {1} station cannot be found. Please try again later. ".format(direction, sname))
@@ -117,18 +138,15 @@ def train(bot, update):
 
 
 
-    #Setting global var station name to the name of the station just searched for
-    global myStation
-    myStation= (jsonobj["ArrayOfObjStationData"]["objStationData"][1]["Stationfullname"])
-
 def nextTrain(bot, update):
+    #i used to keep track of train pos being searched, incremented each time this function is called and reset when a new search is made
     global i
     i += 1
+    #pull out specific eleemnts of the array, using i as the index
     dueIn = (trains[i]['Duein'])
     stationName = (trains[i]["Stationfullname"])
     destination = (trains[i]["Destination"])
     dir = (trains[i]["Direction"])
-
     # Return worthwhile string to user
     update.message.reply_text("A {0} train will service the {1} station in {2} minutes it's heading for {3}. {4} train(s) will service the station before this.".format(dir,stationName,dueIn,destination,i))
 
@@ -173,8 +191,7 @@ def liststations(bot, update):
         # add the stationdesc attribute to the string list_of_stations
         list_of_stations += (attrs['StationDesc'] + ", ")
     # Return a worhtwhile string to the user using the above information
-    update.message.reply_text("Here is a list of all stations currently operating DART services: {0}".format(list_of_stations))
-    update.message.reply_text("To view live availability information for any of these stops simply type 'Train', the name of the station and the direction. For example,  Train Sandymount northbound")
+    update.message.reply_text("Here is a list of all stations currently operating DART services: {0}.\n\nTo view live availability information for any of these stops simply type 'Train', the name of the station and the direction. For example,  Train Sandymount n".format(list_of_stations))
 
 
 def echo(bot, update):
@@ -185,23 +202,22 @@ def echo(bot, update):
 
 
 def error(bot, update, error):
-    logger.warn('Update "%s" caused error "%s"' % (update, error))
+    logger.warning('Update "%s" caused error "%s"' % (update, error))
 
 
 def main():
     # Create EventHandler, pass in api key.
     updater = Updater("460295615:AAEUzHYLg9s1f6YNr1Ng2s5dKMv27lZZcWE")
-
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
-    # when a message contains a defined command (/showme, /thanks, run the thanks/showme function)
+    # when a message contains a defined command (/showm -> run the showme function)
     dp.add_handler(CommandHandler("showme", showme))
     dp.add_handler(CommandHandler("list", liststations))
     dp.add_handler(CommandHandler("start", greeting))
     # when a message triggers the filter_train, run the train function
     dp.add_handler(MessageHandler(filter_train, train))
-    # test handler - when a message that contains text is received - trigger the echo function
     dp.add_handler(MessageHandler(filter_next, nextTrain))
+    # test handler - when a message that contains text is received - trigger the echo function
     dp.add_handler(MessageHandler(Filters.text, echo))
     
 
