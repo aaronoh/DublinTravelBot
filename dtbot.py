@@ -88,22 +88,34 @@ def train(bot, update):
     # For every object in the json obj
     global trains
     trains = []
-    for attrs in jsonobj["ArrayOfObjStationData"]["objStationData"]:
-        #if the direction matches the requested direction
-        if attrs['Direction'] == direction:
-            #if the trains match the searched direction, add them to an array
-            trains.append(attrs)
+    print(jsonobj)
+    try:
+        for attrs in jsonobj["ArrayOfObjStationData"]["objStationData"]:
+            #if the direction matches the requested direction
+            if attrs['Direction'] == direction:
+                #if the trains match the searched direction, add them to an array
+                trains.append(attrs)
 
-    # Pull out specific elements of the first element in the array - reqorked to use this array to allow the user to search for additional trains servicing the same station
-    #e.g Train due in 2 mins, user may be more interested in the next train - Show them [1] instead of [0]
-    dueIn = (trains[0]['Duein'])
-    stationName = (trains[0]["Stationfullname"])
-    destination = (trains[0]["Destination"])
-    dir = (trains[0]["Direction"])
+                # Pull out specific elements of the first element in the array - reqorked to use this array to allow the user to search for additional trains servicing the same station
+                #e.g Train due in 2 mins, user may be more interested in the next train - Show them [1] instead of [0]
+                dueIn = (trains[0]['Duein'])
+                stationName = (trains[0]["Stationfullname"])
+                destination = (trains[0]["Destination"])
+                dir = (trains[0]["Direction"])
+                # Return worthwhile string to user
+                update.message.reply_text("The next {0} train to service the {1} station is heading for {2}, it's due in {3} minutes.".format(dir,stationName,destination,dueIn))
+                return;
+
+            else:
+                update.message.reply_text("There are no trains travelling {0} due at the {1} station within the next 90 minutes, or the {1} station cannot be found. Please try again later. ".format(direction, sname))
+                return;
+
+    except:
+        update.message.reply_text("There are no trains travelling {0} due at the {1} station within the next 90 minutes, or the {1} station cannot be found. Please try again later. ".format(direction, sname))
+        return;
 
 
-    #Return worthwhile string to user
-    update.message.reply_text("The next {0} train to service the {1} station is heading for {2}, it's due in {3} minutes.".format(dir, stationName, destination, dueIn))
+
 
     #Setting global var station name to the name of the station just searched for
     global myStation

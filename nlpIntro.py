@@ -5,15 +5,15 @@ from nltk.tag import pos_tag_sents
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, BaseFilter
 import logging,requests, xmltodict, json
 
-stations = ['Malahide', 'Portmarnock', 'Clongriffin', 'Sutton', 'Bayside', 'Howth Junction', 'Howth', 'Kilbarrack', 'Raheny', 'Harmonstown', 'Killester', 'Clontarf Road', 'Dublin Connolly',
-            'Tara Street', 'Dublin Pearse', 'Grand Canal Dock', 'Lansdowne Road', 'Sandymount', 'Sydney Parade', 'Booterstown', 'Blackrock', 'Seapoint', 'Salthill', 'Dun Laoghaire',
-            'Sandycove', 'Glenageary', 'Dalkey', 'Killiney', 'Shankill', 'Bray', 'Greystones', 'Kilcoole']
-i=0
-for station in stations:
-
-    diff = nltk.edit_distance("dun laorie", station)
-    if diff < 6:
-        print(station)
+# stations = ['Malahide', 'Portmarnock', 'Clongriffin', 'Sutton', 'Bayside', 'Howth Junction', 'Howth', 'Kilbarrack', 'Raheny', 'Harmonstown', 'Killester', 'Clontarf Road', 'Dublin Connolly',
+#             'Tara Street', 'Dublin Pearse', 'Grand Canal Dock', 'Lansdowne Road', 'Sandymount', 'Sydney Parade', 'Booterstown', 'Blackrock', 'Seapoint', 'Salthill', 'Dun Laoghaire',
+#             'Sandycove', 'Glenageary', 'Dalkey', 'Killiney', 'Shankill', 'Bray', 'Greystones', 'Kilcoole']
+# i=0
+# for station in stations:
+#
+#     diff = nltk.edit_distance("dun laorie", station)
+#     if diff < 6:
+#         print(station)
 
 
 # tweets = twitter_samples.strings('positive_tweets.json')
@@ -47,12 +47,12 @@ for station in stations:
 #
 #
 #
-# train_text = state_union.raw("2005-GWBush.txt")
-# sample_text = state_union.raw("2006-GWBush.txt")
-# #Split text into sentences
-# custom_sent_tokenizer = PunktSentenceTokenizer(train_text)
-# #tokenize slit text
-# tokenized = custom_sent_tokenizer.tokenize(sample_text)
+train_text = state_union.raw("2005-GWBush.txt")
+sample_text = state_union.raw("2006-GWBush.txt")
+ #Split text into sentences
+custom_sent_tokenizer = PunktSentenceTokenizer(train_text)
+ #tokenize slit text
+tokenized = custom_sent_tokenizer.tokenize(sample_text)
 
 def process_content():
     try:
@@ -64,15 +64,14 @@ def process_content():
             #part-of-speech tagging - e.g JJ = ADJ, NN = Singular Noun, NS = Plural Noun NNP = Proper Noun
             tagged = nltk.pos_tag(words)
             print('Tagged: ',tagged)
-            #mach pos tagged data with named entities 
+            #mach pos tagged data with named entities
             namedEnt = nltk.ne_chunk(tagged)
             namedEnt.draw()
             print(namedEnt)
     except Exception as e:
         print(str(e))
 
-
-#process_content()
+process_content()
 
 #https://github.com/arop/ner-re-pt/wiki/NLTK
 #http://norvig.com/spell-correct.html
