@@ -1,0 +1,7 @@
+train howth southbound
+train bray south
+train dublin pearse s
+train glenageary northbound
+train killiney n
+train greystones north
+train station name: bray

@@ -1,6 +1,7 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, BaseFilter
 import logging,requests, xmltodict, json
-from tracery_demo import greeting
+from greetings import greeting
+from nlp_NaiveBayesClassifier import classify_message
 import nltk
 
 #Keep track of calls
@@ -19,12 +20,14 @@ stations = ['malahide', 'portmarnock', 'clongriffin', 'sutton', 'bayside', 'howt
 #Filter messages for 'train'
 class FilterTrain(BaseFilter):
     def filter(self, message):
-        return 'train' in message.text.lower()
+        return 'trains' in message.text.lower()
+
+        #return 'train' in message.text.lower()
         #any(text.lower() in message.text.lower() for text in ('Foo', 'Bar'))
 
 class FilterNext(BaseFilter):
     def filter(self, message):
-        return 'next' in message.text.lower()
+        return 'next one' in message.text.lower()
 
 # Initialize filter class.
 filter_train = FilterTrain()
@@ -120,6 +123,8 @@ def train(bot, update):
 
         # Setting global var station name to the name of the station just searched for
         global myStation
+        global myDirection
+        myDirection= dir
         myStation = (jsonobj["ArrayOfObjStationData"]["objStationData"][1]["Stationfullname"])
 
         # Yes? No? MAybe? I don't know - test when stations closed
@@ -141,15 +146,19 @@ def train(bot, update):
 def nextTrain(bot, update):
     #i used to keep track of train pos being searched, incremented each time this function is called and reset when a new search is made
     global i
+    global direction
     i += 1
     #pull out specific eleemnts of the array, using i as the index
-    dueIn = (trains[i]['Duein'])
-    stationName = (trains[i]["Stationfullname"])
-    destination = (trains[i]["Destination"])
-    dir = (trains[i]["Direction"])
-    # Return worthwhile string to user
-    update.message.reply_text("A {0} train will service the {1} station in {2} minutes it's heading for {3}. {4} train(s) will service the station before this.".format(dir,stationName,dueIn,destination,i))
+    try:
+        dueIn = (trains[i]['Duein'])
+        stationName = (trains[i]["Stationfullname"])
+        destination = (trains[i]["Destination"])
+        dir = (trains[i]["Direction"])
+        # Return worthwhile string to user
+        update.message.reply_text("A {0} train will service the {1} station in {2} minutes it's heading for {3}. {4} train(s) will service the station before this.".format(dir,stationName,dueIn,destination,i))
 
+    except:
+        update.message.reply_text('There are no further {0} trains servicing the {1} station within the next 90 minutes. Please try again later.'.format(myDirection, myStation))
 def showme(bot, update):
     #retrieves global station name
     global myStation
@@ -175,7 +184,7 @@ def showme(bot, update):
     update.message.reply_text("See map below for directions to the {0} station.".format(myStation))
 
     #Send a map to the user - retrieve the chat id from the original function call and use the lat/lng vars set above
-    bot.sendLocation(update.effective_chat.id, latitude=lat, longitude=long);
+    bot.sendLocation(update.effective_chat.id, latitude=lat, longitude=long, live_period=600);
 
 def liststations(bot, update):
     # Poll api again - using the station info endpoint
@@ -195,7 +204,7 @@ def liststations(bot, update):
 
 
 def echo(bot, update):
-    update.message.reply_text(update.message.text)
+    update.message.reply_text("Oops, I don't understand your message!\n\nSearch by typing train followed by the name of your station and the direction of travel (north or south).\n\nFor example: train bray south\n\nIf you need any help use /start or /list. ")
     print('************************************************')
     print('{0} typed {1}'.format(str(update.message.from_user.username), str(update.message.text)))
     print('************************************************')
@@ -218,7 +227,7 @@ def main():
     dp.add_handler(MessageHandler(filter_train, train))
     dp.add_handler(MessageHandler(filter_next, nextTrain))
     # test handler - when a message that contains text is received - trigger the echo function
-    dp.add_handler(MessageHandler(Filters.text, echo))
+    dp.add_handler(MessageHandler(Filters.text, classify_message))
     
 
     #add error handler

@@ -1,0 +1,5 @@
+https://www.mattcutts.com/blog/a-quick-tutorial-on-screen/
+
+screen -S dtbot
+
+screen -d -R dtbot
