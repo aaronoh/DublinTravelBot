@@ -13,7 +13,7 @@ def showStation(bot, update):
         # print(test[3])
         for testitem in test:
             diff = nltk.edit_distance(testitem, station)
-            if diff < 4:
+            if diff < 3:
                 print('Original: {0}  New: {1}'.format(test, station))
                 myStation = station
                 # Poll api again - using the station info endpoint as this is the only way of getting their lat/long
@@ -34,7 +34,7 @@ def showStation(bot, update):
                         # Once its' matched one, break out of the for loop
                         break
                     else:
-                        print('FUCK', myStation, attrs)
+                        print(myStation, attrs)
                 # Return a worhtwhile string to the user using the above information
                 update.message.reply_text("See map below for directions to the {0} station.".format(myStation))
                 # Send a map to the user - retrieve the chat id from the original function call and use the lat/lng vars set above

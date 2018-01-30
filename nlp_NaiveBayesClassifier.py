@@ -16,6 +16,8 @@ def classify_message(bot,update):
     ('dart', 'train'),
     ('next dart in', 'train'),
     ('When is the next dart', 'train'),
+    ('train to', 'train'),
+    ('dart to', 'train'),
     ('How long until the next dart', 'train'),
     ("Where is the next dart", 'train'),
     ("Show me where that station is", 'map'),
@@ -47,8 +49,7 @@ def classify_message(bot,update):
 
     if (classifier.classify(test_sent_features) == 'map'):
        showStation(bot, update)
-
-    if (classifier.classify(test_sent_features) == 'train'):
+    elif (classifier.classify(test_sent_features) == 'train'):
         getTrain(bot, update)
 
 
