@@ -43,14 +43,22 @@ def classify_message(bot,update):
     test_sent_features = {word.lower(): (word in word_tokenize(test_sentence.lower())) for word in all_training_words}
 
     print('*******************************')
-    print(classifier.classify(test_sent_features))
-    print(nltk.classify.accuracy(classifier, test_features) * 100)
+    distList = classifier.prob_classify(test_sent_features)
+    print(distList)
+    print(distList.samples())
+    print('Map Prob: ', distList.prob('map') *100, '%')
+    print('Train Prob: ', distList.prob('train')*100, '%')
+    print('Classified as: ',classifier.classify(test_sent_features))
+    print('Accuracy', nltk.classify.accuracy(classifier, test_features) * 100)
     print('*******************************')
 
-    if (classifier.classify(test_sent_features) == 'map'):
+    if (classifier.classify(test_sent_features) == 'map' and distList.prob('map') *100 > 80):
        showStation(bot, update)
-    elif (classifier.classify(test_sent_features) == 'train'):
+    elif (classifier.classify(test_sent_features) == 'train' and distList.prob('train')*100 > 80):
         getTrain(bot, update)
+
+    else:
+        update.message.reply_text("Sorry! I'm not sure what you're looking for. Would you mind rephrasing your question? If you need help try /start :)")
 
 
 

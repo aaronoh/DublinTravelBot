@@ -1,23 +1,47 @@
 import logging,requests, xmltodict, json
 import nltk
+import time
 
 def getTrain(bot, update):
+    url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=incoming&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
+    url = 'https://api.botanalytics.co/v1/messages/generic/'
+    headers = {'Content-Type': 'application/json', 'Authorization': '89725dfb6c81667d4b84a22f460abe00dc61007c'}
+    data = '{"is_sender_bot": false,"user": {"id": "newTestID","name": "TestName"},"message": {"timestamp": 1517941019 ,"text": "TestMessage"}}'
+    r = requests.post(url, headers=headers, data=data)
+    print(r)
+    print('done')
+
     stations = ['malahide', 'portmarnock', 'clongriffin', 'sutton', 'bayside', 'howth junction', 'howth',
                 'kilbarrack', 'raheny', 'harmonstown', 'killester', 'clontarf road', 'dublin connolly',
                 'tara street', 'dublin pearse', 'grand canal dock', 'lansdowne road', 'sandymount', 'sydney parade',
                 'booterstown', 'blackrock', 'seapoint', 'salthill', 'dun laoghaire',
                 'sandycove', 'glenageary', 'dalkey', 'killiney', 'shankill', 'bray', 'greystones', 'kilcoole']
 
-    test = update.message.text.split()
+    directions =['north','south','northbound','southbound','n','s']
+
+    text = update.message.text.split()
+    for direction in directions:
+        for word in text:
+            dir_diff=diff = nltk.edit_distance(word.lower(), direction)
+            if diff < 1:
+                user_d = direction.lower
+
+    if user_d in ('north','northbound','n','nth'):
+        print('n')
+        direction = 'Northbound'
+
+    if user_d in ('south', 'southbound', 's', 'sth'):
+        print('s')
+        direction = 'Southbound'
+
+
     for station in stations:
         # print(test[3])
-        for testitem in test:
-            diff = nltk.edit_distance(testitem, station)
+        for word in text:
+            diff = nltk.edit_distance(word, station)
             if diff < 3:
-                print('Original: {0}  New: {1}'.format(test, station))
+                print('Original: {0}  New: {1}'.format(text, station))
                 myStation = station
-
-                direction = "Southbound"
 
                 url = 'http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc={0}'.format(
                     myStation)
