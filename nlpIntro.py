@@ -4,6 +4,7 @@ from nltk.corpus import twitter_samples, state_union
 from nltk.tag import pos_tag_sents
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, BaseFilter
 import logging,requests, xmltodict, json
+from nltk import sent_tokenize, word_tokenize, pos_tag, ne_chunk
 
 # stations = ['Malahide', 'Portmarnock', 'Clongriffin', 'Sutton', 'Bayside', 'Howth Junction', 'Howth', 'Kilbarrack', 'Raheny', 'Harmonstown', 'Killester', 'Clontarf Road', 'Dublin Connolly',
 #             'Tara Street', 'Dublin Pearse', 'Grand Canal Dock', 'Lansdowne Road', 'Sandymount', 'Sydney Parade', 'Booterstown', 'Blackrock', 'Seapoint', 'Salthill', 'Dun Laoghaire',
@@ -85,14 +86,28 @@ import logging,requests, xmltodict, json
 #wtf engine, tracery 
 
 
-stations = ['malahide', 'portmarnock', 'clongriffin', 'sutton', 'bayside', 'howth junction', 'howth', 'kilbarrack', 'raheny', 'harmonstown', 'killester', 'clontarf road', 'dublin connolly',
-            'tara street', 'dublin pearse', 'grand canal dock', 'lansdowne road', 'sandymount', 'sydney parade', 'booterstown', 'blackrock', 'seapoint', 'salthill', 'dun laoghaire',
-            'sandycove', 'glenageary', 'dalkey', 'killiney', 'shankill', 'bray', 'greystones', 'kilcoole']
+# stations = ['malahide', 'portmarnock', 'clongriffin', 'sutton', 'bayside', 'howth junction', 'howth', 'kilbarrack', 'raheny', 'harmonstown', 'killester', 'clontarf road', 'dublin connolly',
+#             'tara street', 'dublin pearse', 'grand canal dock', 'lansdowne road', 'sandymount', 'sydney parade', 'booterstown', 'blackrock', 'seapoint', 'salthill', 'dun laoghaire',
+#             'sandycove', 'glenageary', 'dalkey', 'killiney', 'shankill', 'bray', 'greystones', 'kilcoole']
+#
+# test = 'Find a train in grstones'.split()
+# for station in stations:
+#    # print(test[3])
+#     for testitem in test:
+#         diff = nltk.edit_distance(testitem, station)
+#         if diff < 3:
+#             print('Original: {0}  New: {1}'.format(test, station))
+#
+#         else: print('Done')
 
-test = 'Find a train in grstones'.split()
-for station in stations:
-   # print(test[3])
-    for testitem in test:
-        diff = nltk.edit_distance(testitem, station)
-        if diff < 3:
-            print('Original: {0}  New: {1}'.format(test, station))
+def extract_entities(text):
+	entities = []
+	for sentence in sent_tokenize(text):
+	    chunks = ne_chunk(pos_tag(word_tokenize(sentence)))
+	    entities.extend([chunk for chunk in chunks if hasattr(chunk, 'label')])
+	return entities
+
+
+if __name__ == '__main__':
+	text = "I went to New York to meet John Smith"
+	print(extract_entities(text))

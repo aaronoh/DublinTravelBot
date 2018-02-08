@@ -20,18 +20,17 @@ def getTrain(bot, update):
     directions =['north','south','northbound','southbound','n','s']
 
     text = update.message.text.split()
+
     for direction in directions:
         for word in text:
-            dir_diff=diff = nltk.edit_distance(word.lower(), direction)
-            if diff < 1:
-                user_d = direction.lower
+            dir_diff = nltk.edit_distance(word.lower(), direction)
+            if dir_diff == 0:
+                user_d = direction.lower()
 
     if user_d in ('north','northbound','n','nth'):
-        print('n')
         direction = 'Northbound'
 
-    if user_d in ('south', 'southbound', 's', 'sth'):
-        print('s')
+    elif user_d in ('south', 'southbound', 's', 'sth'):
         direction = 'Southbound'
 
 
@@ -39,7 +38,7 @@ def getTrain(bot, update):
         # print(test[3])
         for word in text:
             diff = nltk.edit_distance(word, station)
-            if diff < 3:
+            if diff < 2:
                 print('Original: {0}  New: {1}'.format(text, station))
                 myStation = station
 
@@ -59,6 +58,7 @@ def getTrain(bot, update):
                     # For every object in the json obj
                     for attrs in jsonobj["ArrayOfObjStationData"]["objStationData"]:
                         # if the direction matches the requested direction
+                        print(attrs)
                         if attrs['Direction'] == direction:
                             # add the trains to an array
                             trains.append(attrs)
