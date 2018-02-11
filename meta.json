@@ -1,0 +1,19 @@
+{
+  "author":"",
+  "name":"model",
+  "url":"",
+  "version":"0.0.0",
+  "description":"",
+  "lang":"en",
+  "spacy_version":">=2.0.5",
+  "vectors":{
+    "keys":0,
+    "width":0,
+    "vectors":0
+  },
+  "pipeline":[
+    "ner"
+  ],
+  "license":"",
+  "email":""
+}

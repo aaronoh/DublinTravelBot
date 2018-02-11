@@ -1,5 +1,7 @@
 import nltk
 from nltk.tokenize import word_tokenize
+import spacy
+import os
 from telegram.ext import Updater
 import logging,requests, xmltodict, json
 from get_train import getTrain
@@ -7,6 +9,13 @@ from show_Station import showStation
 
 
 def classify_message(bot,update):
+
+    station_components = ['malahide', 'portmarnock', 'clongriffin', 'sutton', 'bayside','howth', 'junction',
+                'kilbarrack', 'raheny', 'harmonstown', 'killester', 'clontarf', 'road', 'connolly',
+                'tara', 'street', 'dublin', 'pearse', 'grand', 'canal', 'dock', 'lansdowne', 'sandymount', 'sydney', 'parade',
+                'booterstown', 'blackrock', 'seapoint', 'salthill', 'laoghaire',
+                'sandycove', 'glenageary', 'dalkey', 'killiney', 'shankill', 'bray', 'greystones', 'kilcoole']
+
     #input sentences with sentiment tags
     trainingData = [('train', 'train'),
     ('next train in', 'train'),
@@ -23,20 +32,21 @@ def classify_message(bot,update):
     ("Show me where that station is", 'map'),
     ("Directions to station", 'map'),
     ("What dart station", 'map'),
+    ("Wheres station", 'map'),
+    ("Wheres bray", 'map'),
+    ("Wheres the station", 'map'),
+    ("Wheres", 'map'),
     ('map', 'map')]
 
     test = [('when will the train be here', 'train'),
             ('where is the train', 'train'),
             ('where is the station','map'),
             ('Is there a dart due', 'train')]
-    global myStation
 
     all_training_words = set(word.lower() for passage in trainingData for word in word_tokenize(passage[0]))
     training = [({word: (word in word_tokenize(x[0])) for word in all_training_words}, x[1]) for x in trainingData]
     classifier = nltk.NaiveBayesClassifier.train(training)
     #classifier.show_most_informative_features()
-
-
     test_features = [({word: (word in word_tokenize(x[0])) for word in all_training_words}, x[1]) for x in test]
 
     test_sentence = update.message.text
@@ -52,10 +62,29 @@ def classify_message(bot,update):
     print('Accuracy', nltk.classify.accuracy(classifier, test_features) * 100)
     print('*******************************')
 
+    #NER
+    ner = spacy.load(os.getcwd())
+    doc = ner(test_sentence)
+    print("Entities in '%s'" % test_sentence)
+    for ent in doc.ents:
+        print(ent.text)
+        NERStation = (ent.text)
+
+    comps = []
+    for components in  station_components:
+        for word in NERStation.split():
+            diff = nltk.edit_distance(word, components)
+            if diff < 3:
+                print('Original: {0}  New: {1}'.format(NERStation.split(), components))
+                comps.append(components)
+                print(comps)
+    userStation = " ".join(comps)
+
     if (classifier.classify(test_sent_features) == 'map' and distList.prob('map') *100 > 80):
-       showStation(bot, update)
+       showStation(bot, update, userStation)
+
     elif (classifier.classify(test_sent_features) == 'train' and distList.prob('train')*100 > 80):
-        getTrain(bot, update)
+        getTrain(bot, update, userStation)
 
     else:
         update.message.reply_text("Sorry! I'm not sure what you're looking for. Would you mind rephrasing your question? If you need help try /start :)")

@@ -1,0 +1,32 @@
+Å´transitions⁄í[
+  {
+    "move":1,
+    "clas":0,
+    "name":"B-STATION",
+    "label":"STATION"
+  },
+  {
+    "move":2,
+    "clas":1,
+    "name":"I-STATION",
+    "label":"STATION"
+  },
+  {
+    "move":3,
+    "clas":2,
+    "name":"L-STATION",
+    "label":"STATION"
+  },
+  {
+    "move":4,
+    "clas":3,
+    "name":"U-STATION",
+    "label":"STATION"
+  },
+  {
+    "move":5,
+    "clas":4,
+    "name":"O",
+    "label":""
+  }
+]
