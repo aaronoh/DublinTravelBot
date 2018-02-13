@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9c6be9a9-8396-4726-b636-879eb848264b" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/NERTraining.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/pos_tag.py" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/DublinTravelBot.iml" afterPath="$PROJECT_DIR$/.idea/DublinTravelBot.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/get_train.py" afterPath="$PROJECT_DIR$/get_train.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nlp_NaiveBayesClassifier.py" afterPath="$PROJECT_DIR$/nlp_NaiveBayesClassifier.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/screen.txt" afterPath="$PROJECT_DIR$/screen.txt" />
-    </list>
+    <list default="true" id="9c6be9a9-8396-4726-b636-879eb848264b" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,9 +14,11 @@
       <file leaf-file-name="nlp_NaiveBayesClassifier.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nlp_NaiveBayesClassifier.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="645">
-              <caret line="45" column="112" lean-forward="false" selection-start-line="45" selection-start-column="112" selection-end-line="45" selection-end-column="112" />
-              <folding />
+            <state relative-caret-position="630">
+              <caret line="49" column="112" lean-forward="false" selection-start-line="49" selection-start-column="112" selection-end-line="49" selection-end-column="112" />
+              <folding>
+                <marker date="1518370276000" expanded="true" signature="252:3797" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -34,21 +27,9 @@
         <entry file="file://$PROJECT_DIR$/NERTraining.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="112">
-              <caret line="297" column="0" lean-forward="true" selection-start-line="297" selection-start-column="0" selection-end-line="297" selection-end-column="0" />
+              <caret line="292" column="0" lean-forward="false" selection-start-line="292" selection-start-column="0" selection-end-line="292" selection-end-column="0" />
               <folding>
                 <element signature="e#1205#1260#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="NER.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/NER.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" column="35" lean-forward="false" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
-              <folding>
-                <element signature="e#0#12#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -89,11 +70,12 @@
       <file leaf-file-name="get_train.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/get_train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="495">
-              <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+            <state relative-caret-position="390">
+              <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
               <folding>
                 <element signature="e#0#40#0" expanded="true" />
-                <marker date="1518359084000" expanded="true" signature="4265:4280" ph="..." />
+                <marker date="1518370110000" expanded="true" signature="3450:3474" ph="..." />
+                <marker date="1518370110000" expanded="true" signature="3459:3474" ph="..." />
               </folding>
             </state>
           </provider>
@@ -138,9 +120,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" fullScreen="true">
-    <option name="y" value="22" />
     <option name="width" value="1440" />
-    <option name="height" value="878" />
+    <option name="height" value="900" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -157,8 +138,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -170,6 +149,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -324,21 +305,21 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.124305554" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35731414" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4964029" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35731414" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4964029" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -371,9 +352,21 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/nlp_NaiveBayesClassifier.py">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1518370276000" expanded="true" signature="252:3797" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nlp_NaiveBayesClassifier.py">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="510">
           <caret line="39" column="112" lean-forward="false" selection-start-line="39" selection-start-column="112" selection-end-line="39" selection-end-column="112" />
-          <folding />
+          <folding>
+            <marker date="1518370276000" expanded="true" signature="252:3797" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -419,7 +412,8 @@
           <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
           <folding>
             <element signature="e#0#40#0" expanded="true" />
-            <marker date="1518359084000" expanded="true" signature="4265:4280" ph="..." />
+            <marker date="1518370110000" expanded="true" signature="3450:3474" ph="..." />
+            <marker date="1518370110000" expanded="true" signature="3459:3474" ph="..." />
           </folding>
         </state>
       </provider>
@@ -428,9 +422,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="5" column="35" lean-forward="false" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -438,7 +430,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <marker date="1518370276000" expanded="true" signature="252:3797" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -448,7 +442,8 @@
           <caret line="35" column="0" lean-forward="true" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
           <folding>
             <element signature="e#0#40#0" expanded="true" />
-            <marker date="1518359084000" expanded="true" signature="4265:4280" ph="..." />
+            <marker date="1518370110000" expanded="true" signature="3450:3474" ph="..." />
+            <marker date="1518370110000" expanded="true" signature="3459:3474" ph="..." />
           </folding>
         </state>
       </provider>
@@ -457,7 +452,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="15" column="22" lean-forward="false" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
-          <folding />
+          <folding>
+            <marker date="1518370276000" expanded="true" signature="252:3797" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -467,7 +464,8 @@
           <caret line="49" column="20" lean-forward="true" selection-start-line="49" selection-start-column="20" selection-end-line="49" selection-end-column="20" />
           <folding>
             <element signature="e#0#40#0" expanded="true" />
-            <marker date="1518359084000" expanded="true" signature="4265:4280" ph="..." />
+            <marker date="1518370110000" expanded="true" signature="3450:3474" ph="..." />
+            <marker date="1518370110000" expanded="true" signature="3459:3474" ph="..." />
           </folding>
         </state>
       </provider>
@@ -476,7 +474,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="15" column="22" lean-forward="true" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
-          <folding />
+          <folding>
+            <marker date="1518370276000" expanded="true" signature="252:3797" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -486,7 +486,8 @@
           <caret line="7" column="109" lean-forward="false" selection-start-line="7" selection-start-column="109" selection-end-line="7" selection-end-column="109" />
           <folding>
             <element signature="e#0#40#0" expanded="true" />
-            <marker date="1518359084000" expanded="true" signature="4265:4280" ph="..." />
+            <marker date="1518370110000" expanded="true" signature="3450:3474" ph="..." />
+            <marker date="1518370110000" expanded="true" signature="3459:3474" ph="..." />
           </folding>
         </state>
       </provider>
@@ -505,29 +506,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/screen.txt">
+    <entry file="file://$PROJECT_DIR$/nlp_NaiveBayesClassifier.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1395">
-          <caret line="93" column="19" lean-forward="false" selection-start-line="93" selection-start-column="19" selection-end-line="93" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/get_train.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+        <state relative-caret-position="630">
+          <caret line="49" column="112" lean-forward="false" selection-start-line="49" selection-start-column="112" selection-end-line="49" selection-end-column="112" />
           <folding>
-            <element signature="e#0#40#0" expanded="true" />
-            <marker date="1518359084000" expanded="true" signature="4265:4280" ph="..." />
+            <marker date="1518370276000" expanded="true" signature="252:3797" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dtbot.py">
+    <entry file="file://$PROJECT_DIR$/NER.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="20" selection-end-column="106" />
+        <state relative-caret-position="60">
+          <caret line="5" column="35" lean-forward="false" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
           <folding />
         </state>
       </provider>
@@ -542,20 +534,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nlp_NaiveBayesClassifier.py">
+    <entry file="file://$PROJECT_DIR$/dtbot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="645">
-          <caret line="45" column="112" lean-forward="false" selection-start-line="45" selection-start-column="112" selection-end-line="45" selection-end-column="112" />
+        <state relative-caret-position="165">
+          <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="20" selection-end-column="106" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/NER.py">
+    <entry file="file://$PROJECT_DIR$/screen.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="35" lean-forward="false" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
+        <state relative-caret-position="1395">
+          <caret line="93" column="19" lean-forward="false" selection-start-line="93" selection-start-column="19" selection-end-line="93" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/get_train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
           <folding>
-            <element signature="e#0#12#0" expanded="true" />
+            <element signature="e#0#40#0" expanded="true" />
+            <marker date="1518370110000" expanded="true" signature="3450:3474" ph="..." />
+            <marker date="1518370110000" expanded="true" signature="3459:3474" ph="..." />
           </folding>
         </state>
       </provider>
@@ -563,7 +565,7 @@
     <entry file="file://$PROJECT_DIR$/NERTraining.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="112">
-          <caret line="297" column="0" lean-forward="true" selection-start-line="297" selection-start-column="0" selection-end-line="297" selection-end-column="0" />
+          <caret line="292" column="0" lean-forward="false" selection-start-line="292" selection-start-column="0" selection-end-line="292" selection-end-column="0" />
           <folding>
             <element signature="e#1205#1260#0" expanded="true" />
           </folding>

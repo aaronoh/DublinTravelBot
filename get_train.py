@@ -11,7 +11,7 @@ def getTrain(bot, update, userStation):
     print(r)
 
     directions =['north','south','northbound','southbound','n','s']
-
+    user_d =''
     text = update.message.text.split()
 
     for direction in directions:
@@ -20,7 +20,11 @@ def getTrain(bot, update, userStation):
             if dir_diff == 0:
                 user_d = direction.lower()
 
-    if user_d in ('north','northbound','n','nth'):
+    if not user_d:
+        update.message.reply_text("Please specifiy a direction of travel, e.g: When's the next train leaving from bray travelling north.")
+        return
+
+    elif user_d in ('north','northbound','n','nth'):
         direction = 'Northbound'
 
     elif user_d in ('south', 'southbound', 's', 'sth'):
@@ -63,8 +67,8 @@ def getTrain(bot, update, userStation):
         global myDirection
         myDirection = dir
         myStation = (jsonobj["ArrayOfObjStationData"]["objStationData"][1]["Stationfullname"])
+        print(userStation)
 
-        # Yes? No? MAybe? I don't know - test when stations closed
         if not trains:
             print(trains)
             update.message.reply_text(
@@ -72,9 +76,8 @@ def getTrain(bot, update, userStation):
                     direction, userStation))
             return;
 
-
     except:
+        print(trains)
         update.message.reply_text(
-            "There are no trains travelling {0} due at the {1} station within the next 90 minutes, or the {1} station cannot be found. Please try again later. ".format(
-                direction, userStation))
+            "Sorry! I couldn't identify the station you're looking for. Please try again, use /list if you're unsure of the station name.")
         return;
