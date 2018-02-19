@@ -1,10 +1,11 @@
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, BaseFilter
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, BaseFilter,CallbackQueryHandler
 import telegram
 import logging,requests, xmltodict, json
 from greetings import greeting
-from nlp_NaiveBayesClassifier import classify_message
+from classify_ner import classify_message
 import nltk
-from closestStation import find, get_location
+from closest_station import find, get_location
+from closest_station import printIt, station_type
 
 
 #Keep track of calls
@@ -231,11 +232,13 @@ def main():
 
 
     # when a message triggers the filter_train, run the train function
-    dp.add_handler(MessageHandler(Filters.location, get_location))
+    dp.add_handler(MessageHandler(Filters.location,station_type))
     dp.add_handler(MessageHandler(filter_train, train))
     dp.add_handler(MessageHandler(filter_next, nextTrain))
     # test handler - when a message that contains text is received - trigger the echo function
     dp.add_handler(MessageHandler(Filters.text, classify_message))
+
+    dp.add_handler(CallbackQueryHandler(printIt))
 
     
 

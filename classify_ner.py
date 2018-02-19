@@ -5,8 +5,8 @@ import os
 from telegram.ext import Updater
 import logging,requests, xmltodict, json
 from get_train import getTrain
-from show_Station import showStation
-from closestStation import get_location, find
+from show_station import showStation
+from closest_station import get_location, find
 
 
 def classify_message(bot,update):

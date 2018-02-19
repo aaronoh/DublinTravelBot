@@ -1,6 +1,7 @@
 import logging,requests, xmltodict, json
 import nltk
 import time
+import telegram
 
 def getTrain(bot, update, userStation):
     url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=incoming&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
@@ -13,7 +14,6 @@ def getTrain(bot, update, userStation):
     directions =['north','south','northbound','southbound','n','s']
     user_d =''
     text = update.message.text.split()
-
     for direction in directions:
         for word in text:
             dir_diff = nltk.edit_distance(word.lower(), direction)
