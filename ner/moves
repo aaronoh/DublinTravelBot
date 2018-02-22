@@ -1,32 +1,56 @@
-Å´transitions⁄í[
+Å´transitions⁄∆[
   {
-    "move":1,
-    "clas":0,
     "name":"B-STATION",
-    "label":"STATION"
+    "clas":0,
+    "label":"STATION",
+    "move":1
   },
   {
-    "move":2,
-    "clas":1,
     "name":"I-STATION",
-    "label":"STATION"
+    "clas":1,
+    "label":"STATION",
+    "move":2
   },
   {
-    "move":3,
-    "clas":2,
     "name":"L-STATION",
-    "label":"STATION"
+    "clas":2,
+    "label":"STATION",
+    "move":3
   },
   {
-    "move":4,
-    "clas":3,
     "name":"U-STATION",
-    "label":"STATION"
+    "clas":3,
+    "label":"STATION",
+    "move":4
   },
   {
-    "move":5,
+    "name":"B-BIKE",
     "clas":4,
+    "label":"BIKE",
+    "move":1
+  },
+  {
+    "name":"I-BIKE",
+    "clas":5,
+    "label":"BIKE",
+    "move":2
+  },
+  {
+    "name":"L-BIKE",
+    "clas":6,
+    "label":"BIKE",
+    "move":3
+  },
+  {
+    "name":"U-BIKE",
+    "clas":7,
+    "label":"BIKE",
+    "move":4
+  },
+  {
     "name":"O",
-    "label":""
+    "clas":8,
+    "label":"",
+    "move":5
   }
 ]

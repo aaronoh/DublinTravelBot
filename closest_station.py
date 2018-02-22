@@ -4,7 +4,7 @@ import telegram
 
 
 def find(bot, update):
-    button_keyboard = [[telegram.KeyboardButton(text="Dart Station!", request_location=True)],[telegram.KeyboardButton(text="Bike Station!", request_location=True)]]
+    button_keyboard = [[telegram.KeyboardButton(text="Share Location!", request_location=True)]]
 
     reply_markup = telegram.ReplyKeyboardMarkup(button_keyboard, one_time_keyboard=True)
     bot.send_message(chat_id=update.effective_chat.id,
@@ -17,38 +17,39 @@ def station_type(bot, update):
     myLat = update.message.location.latitude
     myLong = update.message.location.longitude
 
-    keyboard = [[telegram.InlineKeyboardButton("Dart Station", callback_data='dart'),
-                 telegram.InlineKeyboardButton("Bike Station", callback_data='bike')]]
+    callBike = 'bike {0} {1}'.format(myLat,myLong)
+    callTrain = 'train {0} {1}'.format(myLat,myLong)
+
+    keyboard = [[telegram.InlineKeyboardButton("Dart Station", callback_data= callTrain),
+                 telegram.InlineKeyboardButton("Bike Station", callback_data=callBike)]]
 
     reply_markup = telegram.InlineKeyboardMarkup(keyboard)
 
-    update.message.reply_text('Which tupe of station are you looking for?', reply_markup=reply_markup)
+    update.message.reply_text('Which type of station are you looking for?', reply_markup=reply_markup)
 
     print(myLat, myLong)
 
 def printIt(bot, update):
     query = update.callback_query
-    print(query.data)
-    myLat = update.message.location.latitude
-    myLong = update.message.location.longitude
-    print(myLat,myLong)
+    data = query.data.split()
+    type = data[0]
+    userLat = data[1]
+    userLong = data[2]
+    get_location(bot, update, type,userLat,userLong)
 
-def get_location(bot, update):
-    isTrain = 'false';
-    isBike = 'true'
 
-    print(update.message.location)
+def get_location(bot, update, type,userLat,userLong):
+
     stations = []
     i = 0
     dist = []
 
-    myLat = update.message.location.latitude
-    myLong = update.message.location.longitude
+    myLat = userLat
+    myLong = userLong
 
     # Poll api again - using the station info endpoint
     # xml -> dict -> json str -> json obj
-    if isTrain:
-        print('hcfxhjghjfghjgfhjgfhjgfhgjf')
+    if type == 'train':
         url = 'http://api.irishrail.ie/realtime/realtime.asmx/getAllStationsXML_WithStationType?StationType=D'
         xml = requests.get(url)
         dict = xmltodict.parse(xml.content)
@@ -61,12 +62,12 @@ def get_location(bot, update):
             stations.append(x)
             lats = stations[i][1]
             longs = stations[i][2]
-            d = gpxpy.geo.haversine_distance(myLat, myLong, float(lats), float(longs)), stations[i][0], stations[i][1], \
+            d = gpxpy.geo.haversine_distance(float(myLat), float(myLong), float(lats), float(longs)), stations[i][0], stations[i][1], \
                 stations[i][2]
             dist.append(d)
             i += 1
 
-    if isBike:
+    if type == 'bike':
         jsonstr = requests.get('https://api.jcdecaux.com/vls/v1/stations?contract=dublin&apiKey=2eb0463a8d6feabf397cf5babdc21d4e764701a9')
         jsonobj = (jsonstr.json())
 
@@ -75,7 +76,7 @@ def get_location(bot, update):
             stations.append(x)
             lats = stations[i][1]
             longs = stations[i][2]
-            d = gpxpy.geo.haversine_distance(myLat, myLong, float(lats), float(longs)), stations[i][0], stations[i][1], \
+            d = gpxpy.geo.haversine_distance(float(myLat), float(myLong), float(lats), float(longs)), stations[i][0], stations[i][1], \
                 stations[i][2]
             dist.append(d)
             i += 1
@@ -83,7 +84,8 @@ def get_location(bot, update):
 
 
 
-
+    print(update)
     sortedDist = sorted(dist, key = lambda el: el[0])
-    update.message.reply_text('Your closest station is {0}. Tap on the map below for directions.'.format(sortedDist[0][1]))
+    #update.message.reply_text('Your closest station is {0}. Tap on the map below for directions.'.format(sortedDist[0][1]))
+    bot.send_message(chat_id=update.effective_chat.id, text='Your closest {0} station is {1}. Tap on the map below for directions.'.format(type, sortedDist[0][1]))
     bot.sendLocation(update.effective_chat.id, latitude=sortedDist[0][2], longitude=sortedDist[0][3], live_period=600);

@@ -1,10 +1,11 @@
-stations = ['malahide', 'portmarnock', 'clongriffin', 'sutton', 'bayside', 'howth junction', 'howth', 'kilbarrack', 'raheny', 'harmonstown', 'killester', 'clontarf road', 'dublin connolly',
+import logging,requests, xmltodict, json
+trainStations = ['malahide', 'portmarnock', 'clongriffin', 'sutton', 'bayside', 'howth junction', 'howth', 'kilbarrack', 'raheny', 'harmonstown', 'killester', 'clontarf road', 'dublin connolly',
             'tara street', 'dublin pearse', 'grand canal dock', 'lansdowne road', 'sandymount', 'sydney parade', 'booterstown', 'blackrock', 'seapoint', 'salthill', 'dun laoghaire',
             'sandycove', 'glenageary', 'dalkey', 'killiney', 'shankill', 'bray', 'greystones', 'kilcoole']
 
 TRAIN_DATA = []
 
-for s in stations:
+for s in trainStations:
     x = [
         ("{0} staion north".format(s), {
             'entities': [(0, len(s), 'STATION')]
@@ -36,4 +37,46 @@ for s in stations:
     ]
     TRAIN_DATA = TRAIN_DATA + x
 
-print(TRAIN_DATA)
+
+bikeStations = ['Smithfield North', 'Parnell Square North', 'Clonmel Street', 'Mount Street Lower', 'Christchurch Place', 'Grantham Street', 'Pearse Street', 'York Street East', 'Excise Walk', 'Fitzwilliam Square West',
+                'Portobello Road', 'St. James Hospital (Central)', 'Parnell Street', 'Frederick Street South', 'Fownes Street Upper','Clarendon Row', 'Custom House', 'Hanover Quay', 'Oliver Bond Street',
+                'Collins Barracks Museum', 'Brookfield Road', 'Benson Street', 'Earlsfort Terrace', 'Golden Lane', 'Deverell Place', 'John Street West', 'Fenian Street', 'South Dock Road', 'City Quay', 'Exchequer Street',
+                'The Point', 'Hatch Street', 'Lime Street','Charlemont Street', 'Kilmainham Gaol', 'Hardwicke Place', 'Wolfe Tone Street', 'Francis Street', 'Greek Street', 'Guild Street', 'Herbert Place', 'High Street',
+                'North Circular Road', 'Western Way', 'Talbot Street', 'Newman House', "Sir Patrick's Dun", 'New Central Bank', 'King Street North', 'Herbert Street','Custom House Quay', 'Molesworth Street', 'Georges Quay',
+                'Kilmainham Lane', 'Mount Brown', 'Market Street South', 'Kevin Street', 'Eccles Street East', 'Grand Canal Dock', 'Merrion Square East', 'York Street West', "St. Stephen's Green South", 'Denmark Street Great',
+                'Royal Hospital', 'Heuston Station (Car Park)',"St. Stephen's Green East", 'Heuston Station (Central)', 'Townsend Street', 'Eccles Street', 'Portobello Harbour', 'Mater Hospital', 'Blessington Street',
+                'James Street', 'Merrion Square West', 'Convention Centre', 'Hardwicke Street', 'Parkgate Street', 'Smithfield', 'Dame Street', 'Heuston Bridge (South)', 'Cathal Brugha Street','Sandwith Street', 'Rothe Abbey',
+                "Princes Street / O'Connell Street",'Upper Sherrard Street', 'Fitzwilliam Square East','Grattan Street', 'St James Hospital (Luas)', 'Harcourt Terrace', 'Bolton Street', 'Strand Street Great',
+                'Jervis Street', 'Ormond Quay Upper', 'Barrow Street', 'Mountjoy Square West','Wilton Terrace', 'Emmet Road', 'Heuston Bridge (North)', 'Leinster Street South', 'Blackhall Place']
+
+
+BIKE_DATA = []
+for b in bikeStations:
+    y = [
+        ("Are there any bikes available at the {0} station".format(b), {
+            'entities': [(35, 35 + len(b), 'BIKE')]
+        }),
+        ("Bikes {0}".format(b), {
+            'entities': [(6, 6 + len(b), 'BIKE')]
+        }),
+        ("Any bikes at {0}?".format(b), {
+            'entities': [(13, 13 + len(b), 'BIKE')]
+        }),
+        ("Can I get a bike at {0} station?".format(b), {
+            'entities': [(19, 19 + len(b), 'BIKE')]
+        }),
+        ("Can I get a bike at {0} station?".format(b), {
+            'entities': [(19, 19 + len(b), 'BIKE')]
+        }),
+        ("Where is {0}?".format(b), {
+            'entities': [(9, 9+len(b), 'BIKE')]
+        })
+    ]
+    BIKE_DATA = BIKE_DATA + y
+
+
+ALLTRAININGDATA = TRAIN_DATA + BIKE_DATA;
+
+print(ALLTRAININGDATA)
+
+

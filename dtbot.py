@@ -6,6 +6,7 @@ from classify_ner import classify_message
 import nltk
 from closest_station import find, get_location
 from closest_station import printIt, station_type
+from get_bike import getBike
 
 
 #Keep track of calls
@@ -33,8 +34,13 @@ class FilterNext(BaseFilter):
     def filter(self, message):
         return 'next one' in message.text.lower()
 
+class FilterBike(BaseFilter):
+    def filter(self, message):
+        return 'bikes' in message.text.lower()
+
 # Initialize filter class.
 filter_train = FilterTrain()
+filter_bike = FilterBike()
 filter_next = FilterNext()
 
 # Enable logging
@@ -234,6 +240,7 @@ def main():
     # when a message triggers the filter_train, run the train function
     dp.add_handler(MessageHandler(Filters.location,station_type))
     dp.add_handler(MessageHandler(filter_train, train))
+    dp.add_handler(MessageHandler(filter_bike, getBike))
     dp.add_handler(MessageHandler(filter_next, nextTrain))
     # test handler - when a message that contains text is received - trigger the echo function
     dp.add_handler(MessageHandler(Filters.text, classify_message))

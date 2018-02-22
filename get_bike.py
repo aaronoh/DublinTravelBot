@@ -1,13 +1,17 @@
 import logging,requests, xmltodict, json
 import nltk
 
-def getBike(bot, update, userStation):
-    # url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=incoming&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
+def getBike(bot, update):
+    msg = update.message.text.split()
+    sname = msg[1] +' ' + msg[2]
+    url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=incoming&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
     # url = 'https://api.botanalytics.co/v1/messages/generic/'
-    # headers = {'Content-Type': 'application/json', 'Authorization': '89725dfb6c81667d4b84a22f460abe00dc61007c'}
-    # data = '{"is_sender_bot": false,"user": {"id": "newTestID","name": "TestName"},"message": {"timestamp": 1517941019 ,"text": "TestMessage"}}'
-    # r = requests.post(url, headers=headers, data=data)
-    # print(r)
+    headers = {'Content-Type': 'application/json'}
+    data = '{"userId": "newTestID","name": "TestName"},"message": {"timestamp": 1517941019 ,"text": "TestMessage"}}'
+    analytics = '{{"text": "{2}", "userId": "{0}", "platformJson":{{"userName": "{1}","conversationId": "qwerty","timestamp": 1517941019}}}}'.format(update.effective_chat.id, update.message.from_user.username,update.message.text)
+    print(analytics)
+    r = requests.post(url, headers=headers, data=analytics)
+    print(r)
 
 
     jsonstr = requests.get(
@@ -18,11 +22,12 @@ def getBike(bot, update, userStation):
     for d in data:
         stations.append(data[i]['address'])
         i = i + 1
-    text = 'Smithfield North'
+
 
     print(stations)
     for station in stations:
-        if text == station:
+        print(sname.title(), station)
+        if sname.title() == station:
             user_station = station
             # for word in text:
             #     dir_diff = nltk.edit_distance(word.lower(), station.lower())
