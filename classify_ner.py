@@ -7,6 +7,7 @@ import logging,requests, xmltodict, json
 from get_train import getTrain
 from show_station import showStation
 from closest_station import get_location, find
+from get_bikenlp import getBikeNLP
 
 
 def classify_message(bot,update):
@@ -16,6 +17,16 @@ def classify_message(bot,update):
                 'street', 'dublin', 'pearse', 'grand', 'canal', 'dock', 'lansdowne', 'sandymount', 'sydney', 'parade',
                 'booterstown', 'blackrock', 'seapoint', 'salthill', 'laoghaire',
                 'sandycove', 'glenageary', 'dalkey', 'killiney', 'shankill', 'bray', 'greystones', 'kilcoole']
+
+    bike_station_components = ['Smithfield', 'North', 'Parnell', 'Square', 'North', 'Clonmel', 'Mount', 'Lower', 'Christchurch', 'Place', 'Grantham', 'Pearse', 'York','East', 'Excise', 'Walk', 'Fitzwilliam',
+                'Square', 'West','Portobello', 'Road', 'St.', 'James', 'Hospital', '(Central)','Central', 'Parnell','Frederick','South', 'Fownes','Upper','Clarendon', 'Row', 'Custom', 'House', 'Hanover', 'Quay', 'Oliver', 'Bond',
+                'Collins', 'Barracks','Museum', 'Brookfield', 'Road', 'Benson','Earlsfort', 'Terrace', 'Golden', 'Lane', 'Deverell', 'Place', 'John','West', 'Fenian', 'South', 'Dock','City','Exchequer',
+                'The', 'Point', 'Hatch', 'Lime', 'Charlemont','Kilmainham', 'Gaol', 'Hardwicke', 'Place', 'Wolfe', 'Tone', 'Francis','Greek','Guild','Herbert', 'Place', 'High','North', 'Circular', 'Road', 'Western', 'Way',
+                'Talbot', 'Newman', 'House', 'Sir', "Patrick's", 'Dun', 'New', 'Central', 'Bank', 'King', 'Herbert','Custom','House','Molesworth','Georges','Kilmainham', 'Lane', 'Mount', 'Brown', 'Market', 'South', 'Kevin','Eccles','East',
+                'Grand','Canal', 'Dock', 'Merrion', 'Square', 'East', 'York', 'West', 'St.', "Stephen's", 'Green','Denmark','Great','Royal', 'Hospital', 'Heuston', 'Station', '(Car Park)', 'car','park','East','Townsend','Eccles','Portobello', 'Harbour',
+                'Mater', 'Blessington','James', 'Merrion', 'Square', 'Convention', 'Centre', 'Hardwicke', 'Parkgate', 'Smithfield', 'Dame', 'Heuston', 'Bridge', '(South)', 'Cathal', 'Brugha', 'Sandwith', 'Rothe', 'Abbey',
+                'Princes', "O'Connell", 'Sherrard', 'Fitzwilliam','Grattan', 'James', '(Luas)','Luas', 'Harcourt', 'Bolton', 'Strand','Great','Jervis', 'Ormond',
+                'Barrow', 'Mountjoy','Wilton', 'Emmet', 'Bridge', '(North)', 'Leinster', 'Blackhall', 'Place','Street']
 
     #input sentences with sentiment tags
     trainingData = [('train', 'train'),
@@ -38,6 +49,10 @@ def classify_message(bot,update):
     ("Wheres the station", 'map'),
     ("Wheres", 'map'),
     ('map', 'map'),
+    ("Are there any bikes?", 'bike'),
+    ("How many bikes?", 'bike'),
+    ("Bike", 'bike'),
+    ("bikes", 'bike'),
     ("Wheres is my closest station", 'closest'),
     ("Which is the closest staion", 'closest'),
     ("Wheres is the nearest station", 'closest'),
@@ -48,6 +63,7 @@ def classify_message(bot,update):
 
     test = [('when will the train be here', 'train'),
             ('where is the train', 'train'),
+            ('Is there a bike', 'bike'),
             ('where is the station','map'),
             ('Is there a dart due', 'train')]
 
@@ -65,11 +81,22 @@ def classify_message(bot,update):
     print(distList)
     print(distList.samples())
     print('Map Prob: ', distList.prob('map') *100, '%')
+    print('Bike Prob: ', distList.prob('bike') *100, '%')
     print('Train Prob: ', distList.prob('train')*100, '%')
     print('Closest Prob: ', distList.prob('closest') * 100, '%')
     print('Classified as: ',classifier.classify(test_sent_features))
     print('Accuracy', nltk.classify.accuracy(classifier, test_features) * 100)
     print('*******************************')
+
+    platform = ""
+
+    if classifier.classify(test_sent_features) == 'map' and distList.prob('map') *100 > 80 or classifier.classify(test_sent_features) == 'train' and distList.prob('train') *100 > 80:
+        platform = 'DART'
+
+    elif (classifier.classify(test_sent_features) == 'bike' and distList.prob('bike')*100 > 80):
+        platform = 'DBIKES'
+
+
 
     #NER
     NERStation = ''
@@ -83,11 +110,12 @@ def classify_message(bot,update):
         NERStation = (ent.text)
 
     print(NERStation)
+
     if NERStation == '':
         update.message.reply_text("Sorry! I couldn't identify the station you're looking for. Please try again, use /list if you're unsure of the station name.")
         return
 
-    else:
+    elif platform == 'DART':
         comps = []
         #for each 'component' in the station components array
         for components in  station_components:
@@ -104,16 +132,36 @@ def classify_message(bot,update):
         #convert comps to a sting seperated by spaces -> ner+spell corrected name
         userStation = " ".join(comps)
 
-        if (classifier.classify(test_sent_features) == 'map' and distList.prob('map') *100 > 80):
-           showStation(bot, update, userStation)
+    elif platform == 'DBIKES':
+        comps = []
+        #for each 'component' in the station components array
+        for components in  bike_station_components:
+            #for each word in the split sentence constructed above
+            for word in NERStation.split():
+                #'diff' = the levenstein dist. between the two words
+                diff = nltk.edit_distance(word, components)
+                #if that diff is less than 3
+                if diff < 3:
+                    #print it out, add the spell corrected component to an array
+                    print('Original: {0}  New: {1}'.format(NERStation.split(), components))
+                    comps.append(components)
+                    print(comps)
+        #convert comps to a sting seperated by spaces -> ner+spell corrected name
+        userStation = " ".join(comps)
 
-        elif (classifier.classify(test_sent_features) == 'train' and distList.prob('train')*100 > 80):
-            getTrain(bot, update, userStation)
+    if (classifier.classify(test_sent_features) == 'map' and distList.prob('map') *100 > 80):
+       showStation(bot, update, userStation)
 
-        elif (classifier.classify(test_sent_features) == 'closest' and distList.prob('closest') * 100 > 80):
-            find(bot, update)
-        else:
-            update.message.reply_text("Sorry! I'm not sure what you're looking for. Would you mind rephrasing your question? If you need help try /start :)")
+    elif (classifier.classify(test_sent_features) == 'train' and distList.prob('train')*100 > 80):
+        getTrain(bot, update, userStation)
+
+    elif (classifier.classify(test_sent_features) == 'bike' and distList.prob('bike')*100 > 80):
+        getBikeNLP(bot, update, userStation)
+
+    elif (classifier.classify(test_sent_features) == 'closest' and distList.prob('closest') * 100 > 80):
+        find(bot, update)
+    else:
+        update.message.reply_text("Sorry! I'm not sure what you're looking for. Would you mind rephrasing your question? If you need help try /start :)")
 
 
 

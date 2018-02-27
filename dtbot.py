@@ -36,7 +36,7 @@ class FilterNext(BaseFilter):
 
 class FilterBike(BaseFilter):
     def filter(self, message):
-        return 'bikes' in message.text.lower()
+        return 'dbikes' in message.text.lower()
 
 # Initialize filter class.
 filter_train = FilterTrain()
@@ -212,6 +212,21 @@ def liststations(bot, update):
     # Return a worhtwhile string to the user using the above information
     update.message.reply_text("Here is a list of all stations currently operating DART services: {0}.\n\nTo view live availability information for any of these stops simply type 'Train', the name of the station and the direction. For example,  Train Sandymount n".format(list_of_stations))
 
+def listbikes(bot, update):
+    jsonstr = requests.get(
+        'https://api.jcdecaux.com/vls/v1/stations?contract=dublin&apiKey=2eb0463a8d6feabf397cf5babdc21d4e764701a9')
+    data = (jsonstr.json())
+    i = 0
+    stations = []
+    for d in data:
+        stations.append(data[i]['address'])
+        i = i + 1
+
+    update.message.reply_text(
+        "Here is a list of all stations currently operating DublinBike services: {0}.\n\nTo view live availability information for any of these stops simply type 'dBikes', and the name of the station".format(stations))
+
+
+
 
 def echo(bot, update):
     update.message.reply_text("Oops, I don't understand your message!\n\nSearch by typing train followed by the name of your station and the direction of travel (north or south).\n\nFor example: train bray south\n\nIf you need any help use /start or /list. ")
@@ -233,6 +248,7 @@ def main():
     # when a message contains a defined command (/showm -> run the showme function)
     dp.add_handler(CommandHandler("showme", showme))
     dp.add_handler(CommandHandler("list", liststations))
+    dp.add_handler(CommandHandler("listbikes", listbikes))
     dp.add_handler(CommandHandler("start", greeting))
     dp.add_handler(CommandHandler("find", find))
 

@@ -49,6 +49,15 @@ bikeStations = ['Smithfield North', 'Parnell Square North', 'Clonmel Street', 'M
                 "Princes Street / O'Connell Street",'Upper Sherrard Street', 'Fitzwilliam Square East','Grattan Street', 'St James Hospital (Luas)', 'Harcourt Terrace', 'Bolton Street', 'Strand Street Great',
                 'Jervis Street', 'Ormond Quay Upper', 'Barrow Street', 'Mountjoy Square West','Wilton Terrace', 'Emmet Road', 'Heuston Bridge (North)', 'Leinster Street South', 'Blackhall Place']
 
+bikeStations = ['Smithfield', 'North', 'Parnell', 'Square', 'North', 'Clonmel', 'Street', 'Mount', 'Street', 'Lower', 'Christchurch', 'Place', 'Grantham', 'Street', 'Pearse', 'Street', 'York','East', 'Excise', 'Walk', 'Fitzwilliam',
+                'Square', 'West','Portobello', 'Road', 'St.', 'James', 'Hospital', '(Central)','Central', 'Parnell','Frederick','South', 'Fownes','Upper','Clarendon', 'Row', 'Custom', 'House', 'Hanover', 'Quay', 'Oliver', 'Bond',
+                'Street','Collins', 'Barracks','Museum', 'Brookfield', 'Road', 'Benson','Earlsfort', 'Terrace', 'Golden', 'Lane', 'Deverell', 'Place', 'John','West', 'Fenian', 'South', 'Dock','City','Exchequer',
+                'The', 'Point', 'Hatch', 'Lime', 'Charlemont','Kilmainham', 'Gaol', 'Hardwicke', 'Place', 'Wolfe', 'Tone', 'Francis','Greek','Guild','Herbert', 'Place', 'High','North', 'Circular', 'Road', 'Western', 'Way',
+                'Talbot', 'Newman', 'House', 'Sir', "Patrick's", 'Dun', 'New', 'Central', 'Bank', 'King', 'Herbert','Custom','House','Molesworth','Georges','Kilmainham', 'Lane', 'Mount', 'Brown', 'Market', 'South', 'Kevin','Eccles','East',
+                'Grand','Canal', 'Dock', 'Merrion', 'Square', 'East', 'York', 'West', 'St.', "Stephen's", 'Green','Denmark','Great','Royal', 'Hospital', 'Heuston', 'Station', '(Car Park)', 'car','park','East','Townsend','Eccles','Portobello', 'Harbour',
+                'Mater', 'Blessington','James', 'Merrion', 'Square', 'Convention', 'Centre', 'Hardwicke', 'Parkgate', 'Smithfield', 'Dame', 'Heuston', 'Bridge', '(South)', 'Cathal', 'Brugha', 'Sandwith', 'Rothe', 'Abbey',
+                'Princes', "O'Connell", 'Sherrard', 'Fitzwilliam','Grattan', 'James', '(Luas)','Luas', 'Harcourt', 'Bolton', 'Strand','Great','Jervis', 'Ormond',
+                'Barrow', 'Mountjoy','Wilton', 'Emmet', 'Bridge', '(North)', 'Leinster', 'Blackhall', 'Place']
 
 BIKE_DATA = []
 for b in bikeStations:
