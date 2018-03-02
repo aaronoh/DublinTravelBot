@@ -1,19 +1,19 @@
 {
-  "pipeline":[
-    "ner"
-  ],
-  "license":"",
-  "spacy_version":">=2.0.5",
-  "version":"0.0.0",
-  "name":"model",
-  "email":"",
-  "author":"",
-  "url":"",
-  "lang":"en",
   "vectors":{
     "width":0,
     "vectors":0,
     "keys":0
   },
-  "description":""
+  "url":"",
+  "email":"",
+  "description":"",
+  "license":"",
+  "pipeline":[
+    "ner"
+  ],
+  "version":"0.0.0",
+  "lang":"en",
+  "author":"",
+  "spacy_version":">=2.0.5",
+  "name":"model"
 }

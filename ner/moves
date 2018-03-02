@@ -1,56 +1,56 @@
 Å´transitions⁄∆[
   {
-    "name":"B-STATION",
+    "move":1,
     "clas":0,
     "label":"STATION",
-    "move":1
+    "name":"B-STATION"
   },
   {
-    "name":"I-STATION",
+    "move":2,
     "clas":1,
     "label":"STATION",
-    "move":2
+    "name":"I-STATION"
   },
   {
-    "name":"L-STATION",
+    "move":3,
     "clas":2,
     "label":"STATION",
-    "move":3
+    "name":"L-STATION"
   },
   {
-    "name":"U-STATION",
+    "move":4,
     "clas":3,
     "label":"STATION",
-    "move":4
+    "name":"U-STATION"
   },
   {
-    "name":"B-BIKE",
+    "move":1,
     "clas":4,
     "label":"BIKE",
-    "move":1
+    "name":"B-BIKE"
   },
   {
-    "name":"I-BIKE",
+    "move":2,
     "clas":5,
     "label":"BIKE",
-    "move":2
+    "name":"I-BIKE"
   },
   {
-    "name":"L-BIKE",
+    "move":3,
     "clas":6,
     "label":"BIKE",
-    "move":3
+    "name":"L-BIKE"
   },
   {
-    "name":"U-BIKE",
+    "move":4,
     "clas":7,
     "label":"BIKE",
-    "move":4
+    "name":"U-BIKE"
   },
   {
-    "name":"O",
+    "move":5,
     "clas":8,
     "label":"",
-    "move":5
+    "name":"O"
   }
 ]

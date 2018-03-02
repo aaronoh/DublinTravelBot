@@ -8,10 +8,9 @@ def getBike(bot, update):
     # url = 'https://api.botanalytics.co/v1/messages/generic/'
     headers = {'Content-Type': 'application/json'}
     data = '{"userId": "newTestID","name": "TestName"},"message": {"timestamp": 1517941019 ,"text": "TestMessage"}}'
-    analytics = '{{"text": "{2}", "userId": "{0}", "platformJson":{{"userName": "{1}","conversationId": "qwerty","timestamp": 1517941019}}}}'.format(update.effective_chat.id, update.message.from_user.username,update.message.text)
-    print(analytics)
+    analytics = '{{"text": "{2}", "userId": "{0}", "platformJson":{{"userName": "{1}","Action": "GetBike Command"}}}}'.format(update.effective_chat.id, update.message.from_user.username,update.message.text)
     r = requests.post(url, headers=headers, data=analytics)
-    print(r)
+    print('A',r)
 
 
     jsonstr = requests.get(
@@ -23,10 +22,7 @@ def getBike(bot, update):
         stations.append(data[i]['address'])
         i = i + 1
 
-
-    print(stations)
     for station in stations:
-        print(sname.title(), station)
         if sname.title() == station:
             user_station = station
             # for word in text:
@@ -34,8 +30,6 @@ def getBike(bot, update):
             #     if dir_diff < 4:
             #         user_station = station
 
-    print(user_station)
-    print(data)
     for d in data:
         if d['address'] == user_station:
             avail_bikes = (d['available_bikes'])
@@ -43,5 +37,12 @@ def getBike(bot, update):
 
 
     print(avail_bikes,avail_slots)
+    msg = "There are currently {0} bikes and {1} stands available at the {2} bike station.".format(avail_bikes, avail_slots, user_station)
+    update.message.reply_text(msg)
 
-    update.message.reply_text("There are currently {0} bikes and {1} stands available at the {2} bike station.".format(avail_bikes, avail_slots, user_station))
+    url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=outgoing&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
+    # url = 'https://api.botanalytics.co/v1/messages/generic/'
+    headers = {'Content-Type': 'application/json'}
+    analytics = '{{"text": "{0}", "userId": "DublinTravelBot", "platformJson":{{"userName": "DublinTravelBot","Action": "GetBike Command Reply"}}}}'.format(msg)
+    r = requests.post(url, headers=headers, data=analytics)
+    print('B',r)

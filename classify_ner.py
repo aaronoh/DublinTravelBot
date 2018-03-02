@@ -2,6 +2,7 @@ import nltk
 from nltk.tokenize import word_tokenize
 import spacy
 import os
+import re
 from telegram.ext import Updater
 import logging,requests, xmltodict, json
 from get_train import getTrain
@@ -18,15 +19,16 @@ def classify_message(bot,update):
                 'booterstown', 'blackrock', 'seapoint', 'salthill', 'laoghaire',
                 'sandycove', 'glenageary', 'dalkey', 'killiney', 'shankill', 'bray', 'greystones', 'kilcoole']
 
-    bike_station_components = ['Smithfield', 'North', 'Parnell', 'Square', 'North', 'Clonmel', 'Mount', 'Lower', 'Christchurch', 'Place', 'Grantham', 'Pearse', 'York','East', 'Excise', 'Walk', 'Fitzwilliam',
-                'Square', 'West','Portobello', 'Road', 'St.', 'James', 'Hospital', '(Central)','Central', 'Parnell','Frederick','South', 'Fownes','Upper','Clarendon', 'Row', 'Custom', 'House', 'Hanover', 'Quay', 'Oliver', 'Bond',
-                'Collins', 'Barracks','Museum', 'Brookfield', 'Road', 'Benson','Earlsfort', 'Terrace', 'Golden', 'Lane', 'Deverell', 'Place', 'John','West', 'Fenian', 'South', 'Dock','City','Exchequer',
-                'The', 'Point', 'Hatch', 'Lime', 'Charlemont','Kilmainham', 'Gaol', 'Hardwicke', 'Place', 'Wolfe', 'Tone', 'Francis','Greek','Guild','Herbert', 'Place', 'High','North', 'Circular', 'Road', 'Western', 'Way',
-                'Talbot', 'Newman', 'House', 'Sir', "Patrick's", 'Dun', 'New', 'Central', 'Bank', 'King', 'Herbert','Custom','House','Molesworth','Georges','Kilmainham', 'Lane', 'Mount', 'Brown', 'Market', 'South', 'Kevin','Eccles','East',
-                'Grand','Canal', 'Dock', 'Merrion', 'Square', 'East', 'York', 'West', 'St.', "Stephen's", 'Green','Denmark','Great','Royal', 'Hospital', 'Heuston', 'Station', '(Car Park)', 'car','park','East','Townsend','Eccles','Portobello', 'Harbour',
-                'Mater', 'Blessington','James', 'Merrion', 'Square', 'Convention', 'Centre', 'Hardwicke', 'Parkgate', 'Smithfield', 'Dame', 'Heuston', 'Bridge', '(South)', 'Cathal', 'Brugha', 'Sandwith', 'Rothe', 'Abbey',
-                'Princes', "O'Connell", 'Sherrard', 'Fitzwilliam','Grattan', 'James', '(Luas)','Luas', 'Harcourt', 'Bolton', 'Strand','Great','Jervis', 'Ormond',
-                'Barrow', 'Mountjoy','Wilton', 'Emmet', 'Bridge', '(North)', 'Leinster', 'Blackhall', 'Place','Street']
+    bike_station_components = ['SmithfieldNorth', 'ParnellSquareNorth', 'ClonmelStreet', 'MountStreetLower', 'ChristchurchPlace', 'GranthamStreet', 'PearseStreet', 'YorkStreetEast', 'ExciseWalk', 'FitzwilliamSquareWest', 'PortobelloRoad',
+                'St.JamesHospital(Central)', 'ParnellStreet', 'FrederickStreetSouth', 'FownesStreetUpper', 'ClarendonRow', 'CustomHouse', 'HanoverQuay', 'OliverBondStreet', 'CollinsBarracksMuseum', 'BrookfieldRoad',
+                'BensonStreet', 'EarlsfortTerrace', 'GoldenLane', 'DeverellPlace', 'JohnStreetWest', 'FenianStreet', 'SouthDockRoad', 'CityQuay', 'ExchequerStreet', 'ThePoint', 'HatchStreet', 'LimeStreet', 'CharlemontStreet',
+                'KilmainhamGaol', 'HardwickePlace', 'WolfeToneStreet', 'FrancisStreet', 'GreekStreet', 'GuildStreet', 'HerbertPlace', 'HighStreet', 'NorthCircularRoad', 'WesternWay', 'TalbotStreet', 'NewmanHouse',
+                "SirPatrick'sDun", 'NewCentralBank', 'KingStreetNorth', 'HerbertStreet', 'CustomHouseQuay', 'MolesworthStreet', 'GeorgesQuay', 'KilmainhamLane', 'MountBrown', 'MarketStreetSouth', 'KevinStreet',
+                'EcclesStreetEast', 'GrandCanalDock', 'MerrionSquareEast', 'YorkStreetWest', "St.Stephen'sGreenSouth", 'DenmarkStreetGreat', 'RoyalHospital', 'HeustonStation(CarPark)', "St.Stephen'sGreenEast",
+                'HeustonStation(Central)', 'TownsendStreet', 'EcclesStreet', 'PortobelloHarbour', 'MaterHospital', 'BlessingtonStreet', 'JamesStreet', 'MerrionSquareWest', 'ConventionCentre', 'HardwickeStreet',
+                'ParkgateStreet', 'Smithfield', 'DameStreet', 'HeustonBridge(South)', 'CathalBrughaStreet', 'SandwithStreet', 'RotheAbbey', "PrincesStreet/O'ConnellStreet", 'UpperSherrardStreet', 'FitzwilliamSquareEast',
+                'GrattanStreet', 'StJamesHospital(Luas)', 'HarcourtTerrace', 'BoltonStreet', 'StrandStreetGreat', 'JervisStreet', 'OrmondQuayUpper', 'BarrowStreet', 'MountjoySquareWest', 'WiltonTerrace', 'EmmetRoad',
+                'HeustonBridge(North)', 'LeinsterStreetSouth', 'BlackhallPlace']
 
     #input sentences with sentiment tags
     trainingData = [('train', 'train'),
@@ -136,29 +138,30 @@ def classify_message(bot,update):
         comps = []
         #for each 'component' in the station components array
         for components in  bike_station_components:
-            #for each word in the split sentence constructed above
-            for word in NERStation.split():
-                #'diff' = the levenstein dist. between the two words
-                diff = nltk.edit_distance(word, components)
-                #if that diff is less than 3
-                if diff < 3:
-                    #print it out, add the spell corrected component to an array
-                    print('Original: {0}  New: {1}'.format(NERStation.split(), components))
-                    comps.append(components)
-                    print(comps)
-        #convert comps to a sting seperated by spaces -> ner+spell corrected name
-        userStation = " ".join(comps)
+        #for each word in the split sentence constructed above
+            #'diff' = the levenstein dist. between the two words
+            diff = nltk.edit_distance(NERStation.replace(" ",""), components)
+            #if that diff is less than 3
+            if diff < 3:
+                #print it out, add the spell corrected component to an array
+                print('Original: {0}  New: {1}'.format(NERStation.replace(" ",""), components))
 
-    if (classifier.classify(test_sent_features) == 'map' and distList.prob('map') *100 > 80):
+                #convert comps to a sting seperated by spaces -> ner+spell corrected name
+
+                s =  re.findall('[A-Z][^A-Z]*', components)
+                userStation = " ".join(s)
+                print(userStation)
+
+    if (classifier.classify(test_sent_features) == 'map' and distList.prob('map') *100 > 70):
        showStation(bot, update, userStation)
 
-    elif (classifier.classify(test_sent_features) == 'train' and distList.prob('train')*100 > 80):
+    elif (classifier.classify(test_sent_features) == 'train' and distList.prob('train')*100 > 70):
         getTrain(bot, update, userStation)
 
-    elif (classifier.classify(test_sent_features) == 'bike' and distList.prob('bike')*100 > 80):
+    elif (classifier.classify(test_sent_features) == 'bike' and distList.prob('bike')*100 > 70):
         getBikeNLP(bot, update, userStation)
 
-    elif (classifier.classify(test_sent_features) == 'closest' and distList.prob('closest') * 100 > 80):
+    elif (classifier.classify(test_sent_features) == 'closest' and distList.prob('closest') * 100 > 70):
         find(bot, update)
     else:
         update.message.reply_text("Sorry! I'm not sure what you're looking for. Would you mind rephrasing your question? If you need help try /start :)")
