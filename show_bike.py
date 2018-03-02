@@ -2,7 +2,7 @@ import logging,requests, xmltodict, json
 import nltk
 import time
 
-def getBike(bot, update, userStation):
+def showBike(bot, update, userStation):
     # url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=incoming&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
     # url = 'https://api.botanalytics.co/v1/messages/generic/'
     # headers = {'Content-Type': 'application/json', 'Authorization': '89725dfb6c81667d4b84a22f460abe00dc61007c'}
@@ -19,11 +19,10 @@ def getBike(bot, update, userStation):
     for d in data:
         stations.append(data[i]['address'])
         i = i + 1
-    text = 'Smithfield North'
 
     print(stations)
     for station in stations:
-        if text == station:
+        if userStation == station:
             user_station = station
             # for word in text:
             #     dir_diff = nltk.edit_distance(word.lower(), station.lower())

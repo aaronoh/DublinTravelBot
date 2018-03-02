@@ -9,6 +9,7 @@ from get_train import getTrain
 from show_Station import showStation
 from closest_station import get_location, find
 from get_bikenlp import getBikeNLP
+from show_bike import showBike
 
 
 def classify_message(bot,update):
@@ -97,7 +98,7 @@ def classify_message(bot,update):
 
     platform = ""
 
-    if classifier.classify(test_sent_features) == 'map' and distList.prob('map') *100 > 70 or classifier.classify(test_sent_features) == 'train' and distList.prob('train') *100 > 80:
+    if classifier.classify(test_sent_features) == 'map' and distList.prob('map') *100 > 70 or classifier.classify(test_sent_features) == 'train' and distList.prob('train') *100 > 70:
         platform = 'DART'
 
     elif (classifier.classify(test_sent_features) == 'bike' and distList.prob('bike')*100 > 70):
@@ -152,18 +153,23 @@ def classify_message(bot,update):
 
                 #convert comps to a sting seperated by spaces -> ner+spell corrected name
 
-                s =  re.findall('[A-Z][^A-Z]*', components)
+                s = re.findall('[A-Z][^A-Z]*', components)
                 userStation = " ".join(s)
                 print(userStation)
 
-    if (classifier.classify(test_sent_features) == 'map' and distList.prob('map') *100 > 70):
-       showStation(bot, update, userStation)
+
+    if (classifier.classify(test_sent_features) == 'map' and distList.prob('map') *100 > 60):
+         showStation(bot, update, userStation)
+
 
     elif (classifier.classify(test_sent_features) == 'train' and distList.prob('train')*100 > 70):
         getTrain(bot, update, userStation)
 
+
     elif (classifier.classify(test_sent_features) == 'bike' and distList.prob('bike')*100 > 70):
         getBikeNLP(bot, update, userStation)
+        showBike(bot, update, userStation)
+
 
     elif (classifier.classify(test_sent_features) == 'closest' and distList.prob('closest') * 100 > 70):
         find(bot, update)
