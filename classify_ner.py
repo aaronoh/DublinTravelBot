@@ -6,7 +6,7 @@ import re
 from telegram.ext import Updater
 import logging,requests, xmltodict, json
 from get_train import getTrain
-from show_station import showStation
+from show_Station import showStation
 from closest_station import get_location, find
 from get_bikenlp import getBikeNLP
 

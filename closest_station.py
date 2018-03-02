@@ -37,7 +37,7 @@ def printIt(bot, update):
     print(update)
     print(data)
     if data[0] == 'train' or data[0] == 'bike':
-        type = data[0]
+        atype = data[0]
         userLat = data[1]
         userLong = data[2]
         get_location(bot, update, type,userLat,userLong)
