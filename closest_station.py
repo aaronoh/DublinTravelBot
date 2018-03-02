@@ -1,6 +1,7 @@
 import logging,requests, xmltodict, json
 import gpxpy.geo
 import telegram
+from get_train import fetch_train
 
 
 def find(bot, update):
@@ -29,13 +30,25 @@ def station_type(bot, update):
 
     print(myLat, myLong)
 
+#ONLY CALLBACK FUNCTION
 def printIt(bot, update):
     query = update.callback_query
     data = query.data.split()
-    type = data[0]
-    userLat = data[1]
-    userLong = data[2]
-    get_location(bot, update, type,userLat,userLong)
+    print(update)
+    print(data)
+    if data[0] == 'train' or data[0] == 'bike':
+        type = data[0]
+        userLat = data[1]
+        userLong = data[2]
+        get_location(bot, update, type,userLat,userLong)
+
+    elif data[0] == 'Northbound' or data[0] == 'Southbound':
+        user_d = data[0]
+        data.pop(0)
+        userStation = ' '.join(data)
+        print(userStation, user_d)
+        fetch_train(bot, update,userStation, user_d)
+
 
 
 def get_location(bot, update, type,userLat,userLong):

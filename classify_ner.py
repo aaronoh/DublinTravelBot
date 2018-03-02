@@ -55,6 +55,10 @@ def classify_message(bot,update):
     ("How many bikes?", 'bike'),
     ("Bike", 'bike'),
     ("bikes", 'bike'),
+    ('Bike Guild Street', 'bike'),
+    ('Bikes Available', 'bike'),
+    ('Can I get a bike', 'bike'),
+    ('Free bikes', 'bike'),
     ("Wheres is my closest station", 'closest'),
     ("Which is the closest staion", 'closest'),
     ("Wheres is the nearest station", 'closest'),
@@ -66,6 +70,7 @@ def classify_message(bot,update):
     test = [('when will the train be here', 'train'),
             ('where is the train', 'train'),
             ('Is there a bike', 'bike'),
+            ('Bike Guild Street', 'bike'),
             ('where is the station','map'),
             ('Is there a dart due', 'train')]
 
@@ -92,10 +97,10 @@ def classify_message(bot,update):
 
     platform = ""
 
-    if classifier.classify(test_sent_features) == 'map' and distList.prob('map') *100 > 80 or classifier.classify(test_sent_features) == 'train' and distList.prob('train') *100 > 80:
+    if classifier.classify(test_sent_features) == 'map' and distList.prob('map') *100 > 70 or classifier.classify(test_sent_features) == 'train' and distList.prob('train') *100 > 80:
         platform = 'DART'
 
-    elif (classifier.classify(test_sent_features) == 'bike' and distList.prob('bike')*100 > 80):
+    elif (classifier.classify(test_sent_features) == 'bike' and distList.prob('bike')*100 > 70):
         platform = 'DBIKES'
 
 
@@ -112,7 +117,6 @@ def classify_message(bot,update):
         NERStation = (ent.text)
 
     print(NERStation)
-
     if NERStation == '':
         update.message.reply_text("Sorry! I couldn't identify the station you're looking for. Please try again, use /list if you're unsure of the station name.")
         return

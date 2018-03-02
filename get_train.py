@@ -3,6 +3,22 @@ import nltk
 import time
 import telegram
 
+def determine_direction(bot, update, userStation):
+
+    N = 'Northbound {0}'.format(userStation)
+    S = 'Southbound {0}'.format(userStation)
+    keyboard = [[telegram.InlineKeyboardButton("Northbound", callback_data=N ),
+                 telegram.InlineKeyboardButton("Southbound", callback_data=S)]]
+
+    reply_markup = telegram.InlineKeyboardMarkup(keyboard)
+
+    update.message.reply_text('Please specify the direction of travel', reply_markup=reply_markup)
+
+def callback_direction(bot, update):
+    query = update.callback_query
+    data = query.data.split()
+    print(data)
+
 def getTrain(bot, update, userStation):
     url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=incoming&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
     url = 'https://api.botanalytics.co/v1/messages/generic/'
@@ -21,7 +37,7 @@ def getTrain(bot, update, userStation):
                 user_d = direction.lower()
 
     if not user_d:
-        update.message.reply_text("Please specifiy a direction of travel, e.g: When's the next train leaving from bray travelling north.")
+        determine_direction(bot, update, userStation)
         return
 
     elif user_d in ('north','northbound','n','nth'):
@@ -29,7 +45,9 @@ def getTrain(bot, update, userStation):
 
     elif user_d in ('south', 'southbound', 's', 'sth'):
         direction = 'Southbound'
+    fetch_train(bot, update, userStation,direction)
 
+def fetch_train(bot, update, userStation,direction):
     url = 'http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc={0}'.format(
         userStation)
     # xml -> dict -> json str -> json obj
@@ -37,11 +55,13 @@ def getTrain(bot, update, userStation):
     dict = xmltodict.parse(xml.content)
     jsonstr = json.dumps(dict)
     jsonobj = json.loads(jsonstr)
-
+    print(url, direction)
     # global array, set to empty at each call (new search)
     global trains
     trains = []
-
+    if jsonobj == {'ArrayOfObjStationData': {'@xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance', '@xmlns': 'http://api.irishrail.ie/realtime/', '@xmlns:xsd': 'http://www.w3.org/2001/XMLSchema'}}:
+        bot.send_message(chat_id=update.effective_chat.id, text='There are no trains currently running. Please check the IrishRail website for service disruptions. http://www.irishrail.ie/')
+        return
     try:
         # For every object in the json obj
         for attrs in jsonobj["ArrayOfObjStationData"]["objStationData"]:
@@ -58,8 +78,10 @@ def getTrain(bot, update, userStation):
         destination = (trains[0]["Destination"])
         dir = (trains[0]["Direction"])
 
+        print(dueIn,stationName,destination,dir)
+
         # Return worthwhile string to user
-        update.message.reply_text(
+        bot.send_message(chat_id=update.effective_chat.id, text=
             "The next {0} train to service the {1} station is heading for {2}, it's due in {3} minutes.".format(
                 dir, stationName, destination, dueIn))
 
@@ -68,16 +90,18 @@ def getTrain(bot, update, userStation):
         myDirection = dir
         myStation = (jsonobj["ArrayOfObjStationData"]["objStationData"][1]["Stationfullname"])
         print(userStation)
+        print(myStation)
+        print(myDirection)
 
         if not trains:
             print(trains)
-            update.message.reply_text(
+            bot.send_message(chat_id=update.effective_chat.id, text=
                 "There are no trains travelling {0} due at the {1} station within the next 90 minutes, or the {1} station cannot be found. Please try again later. ".format(
                     direction, userStation))
             return;
 
     except:
         print(trains)
-        update.message.reply_text(
+        bot.send_message(chat_id=update.effective_chat.id, text=
             "Sorry! I couldn't identify the station you're looking for. Please try again, use /list if you're unsure of the station name.")
         return;
