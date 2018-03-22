@@ -6,14 +6,14 @@ import re
 from telegram.ext import Updater
 import logging,requests, xmltodict, json
 from get_train import getTrain
-from show_Station import showStation
+from show_station import showStation
 from closest_station import get_location, find
 from get_bikenlp import getBikeNLP
 from show_bike import showBike
 
 
 def classify_message(bot,update):
-
+    userStation =''
     station_components = ['malahide', 'portmarnock', 'clongriffin', 'sutton', 'bayside','howth', 'junction',
                 'kilbarrack', 'raheny', 'harmonstown', 'killester', 'clontarf', 'road', 'connolly',
                 'street', 'dublin', 'pearse', 'grand', 'canal', 'dock', 'lansdowne', 'sandymount', 'sydney', 'parade',
@@ -157,24 +157,27 @@ def classify_message(bot,update):
                 userStation = " ".join(s)
                 print(userStation)
 
-
-    if (classifier.classify(test_sent_features) == 'map' and distList.prob('map') *100 > 60):
-         showStation(bot, update, userStation)
-
-
-    elif (classifier.classify(test_sent_features) == 'train' and distList.prob('train')*100 > 70):
-        getTrain(bot, update, userStation)
+    if userStation:
+        if (classifier.classify(test_sent_features) == 'map' and distList.prob('map') *100 > 60):
+             showStation(bot, update, userStation)
 
 
-    elif (classifier.classify(test_sent_features) == 'bike' and distList.prob('bike')*100 > 70):
-        getBikeNLP(bot, update, userStation)
-        showBike(bot, update, userStation)
+        elif (classifier.classify(test_sent_features) == 'train' and distList.prob('train')*100 > 70):
+            getTrain(bot, update, userStation)
 
 
-    elif (classifier.classify(test_sent_features) == 'closest' and distList.prob('closest') * 100 > 70):
-        find(bot, update)
+        elif (classifier.classify(test_sent_features) == 'bike' and distList.prob('bike')*100 > 70):
+            getBikeNLP(bot, update, userStation)
+            showBike(bot, update, userStation)
+
+
+        elif (classifier.classify(test_sent_features) == 'closest' and distList.prob('closest') * 100 > 70):
+            find(bot, update)
+        else:
+            update.message.reply_text("Sorry! I'm not sure what you're looking for. Would you mind rephrasing your question? If you need help try /start :)")
+
     else:
-        update.message.reply_text("Sorry! I'm not sure what you're looking for. Would you mind rephrasing your question? If you need help try /start :)")
+        update.message.reply_text("Sorry! I'm not sure which station you're looking for. Double check your station name or use /list or /listbikes to verify :)")
 
 
 

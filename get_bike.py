@@ -2,8 +2,8 @@ import logging,requests, xmltodict, json
 import nltk
 
 def getBike(bot, update):
-    msg = update.message.text.split()
-    sname = msg[1] +' ' + msg[2]
+    msg = update.message.text.split(' ',1)
+    sname = msg[1]
     url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=incoming&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
     # url = 'https://api.botanalytics.co/v1/messages/generic/'
     headers = {'Content-Type': 'application/json'}
