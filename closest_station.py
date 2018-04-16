@@ -14,7 +14,6 @@ def find(bot, update):
 
 
 def station_type(bot, update):
-    #just need to figure out how to get long/lat from s_t to PrintIT
     myLat = update.message.location.latitude
     myLong = update.message.location.longitude
 
@@ -31,13 +30,13 @@ def station_type(bot, update):
     print(myLat, myLong)
 
 #ONLY CALLBACK FUNCTION
-def printIt(bot, update):
+def get_closest_station(bot, update):
     query = update.callback_query
     data = query.data.split()
     print(update)
     print(data)
     if data[0] == 'train' or data[0] == 'bike':
-        atype = data[0]
+        type = data[0]
         userLat = data[1]
         userLong = data[2]
         get_location(bot, update, type,userLat,userLong)
@@ -99,6 +98,6 @@ def get_location(bot, update, type,userLat,userLong):
 
     print(update)
     sortedDist = sorted(dist, key = lambda el: el[0])
-    #update.message.reply_text('Your closest station is {0}. Tap on the map below for directions.'.format(sortedDist[0][1]))
-    bot.send_message(chat_id=update.effective_chat.id, text='Your closest {0} station is {1}. Tap on the map below for directions.'.format(type, sortedDist[0][1]))
+    bot.send_message(chat_id=update.effective_chat.id, text='Your closest {0} station is {1}. Tap on the map below '
+                                                            'for directions.'.format(type, sortedDist[0][1]))
     bot.sendLocation(update.effective_chat.id, latitude=sortedDist[0][2], longitude=sortedDist[0][3], live_period=600);

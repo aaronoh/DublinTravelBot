@@ -5,10 +5,10 @@ def getBike(bot, update):
     msg = update.message.text.split(' ',1)
     sname = msg[1]
     url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=incoming&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
-    # url = 'https://api.botanalytics.co/v1/messages/generic/'
     headers = {'Content-Type': 'application/json'}
     data = '{"userId": "newTestID","name": "TestName"},"message": {"timestamp": 1517941019 ,"text": "TestMessage"}}'
-    analytics = '{{"text": "{2}", "userId": "{0}", "platformJson":{{"userName": "{1}","Action": "GetBike Command"}}}}'.format(update.effective_chat.id, update.message.from_user.username,update.message.text)
+    analytics = '{{"text": "{2}", "userId": "{0}", "platformJson":{{"userName": "{1}","Action": "GetBike Command"}}}}'\
+        .format(update.effective_chat.id, update.message.from_user.username,update.message.text)
     r = requests.post(url, headers=headers, data=analytics)
     print('A',r)
 
@@ -37,7 +37,8 @@ def getBike(bot, update):
 
 
     print(avail_bikes,avail_slots)
-    msg = "There are currently {0} bikes and {1} stands available at the {2} bike station.".format(avail_bikes, avail_slots, user_station)
+    msg = "There are currently {0} bikes and {1} stands available at the" \
+          " {2} bike station.".format(avail_bikes, avail_slots, user_station)
     update.message.reply_text(msg)
 
     url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=outgoing&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'

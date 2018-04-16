@@ -81,7 +81,7 @@ def main(model=None, new_model_name='animal', output_dir=None, n_iter=20):
             random.shuffle(TRAIN_DATA)
             losses = {}
             for text, annotations in TRAIN_DATA:
-                nlp.update([text], [annotations], sgd=optimizer, drop=0.35,
+                nlp.update([text], [annotations], sgd= nlp.begin_training(), drop=0.35,
                            losses=losses)
             print(losses)
 

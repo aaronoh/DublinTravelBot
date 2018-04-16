@@ -71,7 +71,8 @@ def fetch_train(bot, update, userStation,direction):
                 # add the trains to an array
                 trains.append(attrs)
 
-        # Pull out specific elements of the first element in the array - reqorked to use this array to allow the user to search for additional trains servicing the same station
+        # Pull out specific elements of the first element in the array -
+        #  reworked to use this array to allow the user to search for additional trains servicing the same station
         # e.g Train due in 2 mins, user may be more interested in the next train - Show them [1] instead of [0]
         dueIn = (trains[0]['Duein'])
         stationName = (trains[0]["Stationfullname"])
@@ -101,7 +102,8 @@ def fetch_train(bot, update, userStation,direction):
             return;
 
     except:
-        print(trains)
+        print(jsonobj)
+        print(myStation)
         bot.send_message(chat_id=update.effective_chat.id, text=
             "Sorry! I couldn't identify the station you're looking for. Please try again, use /list if you're unsure of the station name.")
         return;

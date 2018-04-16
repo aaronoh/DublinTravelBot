@@ -5,7 +5,7 @@ from greetings import greeting
 from classify_ner import classify_message
 import nltk
 from closest_station import find, get_location
-from closest_station import printIt, station_type
+from closest_station import get_closest_station, station_type
 from get_bike import getBike
 
 
@@ -223,7 +223,8 @@ def listbikes(bot, update):
         i = i + 1
 
     update.message.reply_text(
-        "Here is a list of all stations currently operating DublinBike services: {0}.\n\nTo view live availability information for any of these stops simply type 'dBikes', and the name of the station".format(stations))
+        "Here is a list of all stations currently operating DublinBike services: {0}.\n\nTo view live "
+        "availability information for any of these stops simply type 'dBikes', and the name of the station".format(stations))
 
 
 
@@ -261,7 +262,7 @@ def main():
     # test handler - when a message that contains text is received - trigger the echo function
     dp.add_handler(MessageHandler(Filters.text, classify_message))
 
-    dp.add_handler(CallbackQueryHandler(printIt))
+    dp.add_handler(CallbackQueryHandler(get_closest_station ))
 
     
 

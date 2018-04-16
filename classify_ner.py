@@ -6,7 +6,7 @@ import re
 from telegram.ext import Updater
 import logging,requests, xmltodict, json
 from get_train import getTrain
-from show_station import showStation
+from show_Station import showStation
 from closest_station import get_location, find
 from get_bikenlp import getBikeNLP
 from show_bike import showBike
@@ -109,11 +109,10 @@ def classify_message(bot,update):
     #NER
     NERStation = ''
     ner = spacy.load(os.getcwd())
-    doc = ner(test_sentence)
+    doc = ner(update.message.text)
     print("Entities in '%s'" % test_sentence)
     #for each entity in the doc
     for ent in doc.ents:
-        #print them, set them to the val of NER station
         print(ent.text)
         NERStation = (ent.text)
 
@@ -132,12 +131,11 @@ def classify_message(bot,update):
                 diff = nltk.edit_distance(word, components)
                 #if that diff is less than 3
                 if diff < 3:
-                    #print it out, add the spell corrected component to an array
                     print('Original: {0}  New: {1}'.format(NERStation.split(), components))
                     comps.append(components)
-                    print(comps)
         #convert comps to a sting seperated by spaces -> ner+spell corrected name
         userStation = " ".join(comps)
+        print('sdfdsfdsdfsfdsfds', userStation)
 
     elif platform == 'DBIKES':
         comps = []
@@ -147,7 +145,7 @@ def classify_message(bot,update):
             #'diff' = the levenstein dist. between the two words
             diff = nltk.edit_distance(NERStation.replace(" ",""), components)
             #if that diff is less than 3
-            if diff < 3:
+            if diff < 5:
                 #print it out, add the spell corrected component to an array
                 print('Original: {0}  New: {1}'.format(NERStation.replace(" ",""), components))
 
@@ -156,8 +154,9 @@ def classify_message(bot,update):
                 s = re.findall('[A-Z][^A-Z]*', components)
                 userStation = " ".join(s)
                 print(userStation)
-
-    if userStation:
+    if (classifier.classify(test_sent_features) == 'closest' and distList.prob('closest') * 100 > 70):
+        find(bot, update)
+    elif userStation:
         if (classifier.classify(test_sent_features) == 'map' and distList.prob('map') *100 > 60):
              showStation(bot, update, userStation)
 
@@ -170,14 +169,13 @@ def classify_message(bot,update):
             getBikeNLP(bot, update, userStation)
             showBike(bot, update, userStation)
 
-
-        elif (classifier.classify(test_sent_features) == 'closest' and distList.prob('closest') * 100 > 70):
-            find(bot, update)
         else:
             update.message.reply_text("Sorry! I'm not sure what you're looking for. Would you mind rephrasing your question? If you need help try /start :)")
 
     else:
-        update.message.reply_text("Sorry! I'm not sure which station you're looking for. Double check your station name or use /list or /listbikes to verify :)")
+        update.message.reply_text(
+            "Sorry! I'm not sure which station you're looking for. Double check your station name or use /list or /listbikes to verify :)")
+
 
 
 
