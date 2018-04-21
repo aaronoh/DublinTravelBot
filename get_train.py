@@ -34,24 +34,28 @@ def getTrain(bot, update, userStation):
         return
 
     elif user_d in ('north','northbound','n','nth'):
+        print('A')
         direction = 'Northbound'
 
     elif user_d in ('south', 'southbound', 's', 'sth'):
+        print('B')
         direction = 'Southbound'
+
     fetch_train(bot, update, userStation,direction)
 
 def fetch_train(bot, update, userStation,direction):
-    url = 'http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc={0}'.format(
+    apiurl = 'http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc={0}'.format(
         userStation)
     # xml -> dict -> json str -> json obj
-    xml = requests.get(url)
+    xml = requests.get(apiurl)
     dict = xmltodict.parse(xml.content)
     jsonstr = json.dumps(dict)
     jsonobj = json.loads(jsonstr)
-    print(url, direction)
+    print(apiurl, direction)
+    print('sdfoksdlf',update)
     url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=incoming&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
     headers = {'Content-Type': 'application/json'}
-    analytics = '{{"text": "{2}", "userId": "{0}", "platformJson":{{"userName": "{1}","Action": "Fetch Train"}}}}'.format(update.effective_chat.id, update.message.from_user.username,update.message.text)
+    analytics = '{{"text": "Direction: {1} Station: {2} ", "userId": "{0}", "platformJson":{{Action": "Fetch Train"}}}}'.format(update.effective_chat.id, direction, userStation)
     requests.post(url, headers=headers, data=analytics)
     # global array, set to empty at each call (new search)
     global trains
@@ -64,7 +68,13 @@ def fetch_train(bot, update, userStation,direction):
         for attrs in jsonobj["ArrayOfObjStationData"]["objStationData"]:
             # if the direction matches the requested direction
             print(attrs)
-            if attrs['Direction'] == direction:
+            if direction == 'Northbound':
+                direction = ['To Malahide', 'To Howth', 'northbound']
+
+            elif direction == 'Southbound':
+                direction = ['To Bray', 'To Greystones','southbound']
+
+            if attrs['Direction']in (direction[0], direction[1]):
                 # add the trains to an array
                 trains.append(attrs)
 
@@ -74,7 +84,8 @@ def fetch_train(bot, update, userStation,direction):
         dueIn = (trains[0]['Duein'])
         stationName = (trains[0]["Stationfullname"])
         destination = (trains[0]["Destination"])
-        dir = (trains[0]["Direction"])
+
+        dir = direction[2]
 
         print(dueIn,stationName,destination,dir)
         # Return worthwhile string to user
@@ -92,7 +103,7 @@ def fetch_train(bot, update, userStation,direction):
         # Setting global var station name to the name of the station just searched for
         global myDirection
         myDirection = dir
-        myStation = (jsonobj["ArrayOfObjStationData"]["objStationData"][1]["Stationfullname"])
+        myStation = (jsonobj["ArrayOfObjStationData"]["objStationData"][0]["Stationfullname"])
         print(userStation)
         print(myStation)
         print(myDirection)

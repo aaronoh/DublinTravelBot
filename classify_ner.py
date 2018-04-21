@@ -40,6 +40,8 @@ def classify_message(bot,update):
     ('dart', 'train'),
     ('next dart in', 'train'),
     ('When is the next dart', 'train'),
+    ('When is the next train', 'train'),
+    ('Next train at killieny', 'train'),
     ('train to', 'train'),
     ('dart to', 'train'),
     ('How long until the next dart', 'train'),

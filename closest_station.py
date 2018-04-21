@@ -33,7 +33,6 @@ def station_type(bot, update):
 def get_closest_station(bot, update):
     query = update.callback_query
     data = query.data.split()
-    print(update)
     print(data)
     if data[0] == 'train' or data[0] == 'bike':
         type = data[0]
@@ -71,7 +70,7 @@ def get_location(bot, update, type,userLat,userLong):
         url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=incoming&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
         headers = {'Content-Type': 'application/json'}
         analytics = '{{"text": "{2}", "userId": "{0}", "platformJson":{{"userName": "{1}","Action": "Get Train Location"}}}}'.format(
-            update.effective_chat.id, update.message.from_user.username, update.message.text)
+            update.effective_chat.id, update.callback_query.from_user.username, update.callback_query.message.text)
         requests.post(url, headers=headers, data=analytics)
 
         for attrs in jsonobj["ArrayOfObjStation"]["objStation"]:
@@ -92,7 +91,7 @@ def get_location(bot, update, type,userLat,userLong):
         url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=incoming&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
         headers = {'Content-Type': 'application/json'}
         analytics = '{{"text": "{2}", "userId": "{0}", "platformJson":{{"userName": "{1}","Action": "Get Bike Location"}}}}'.format(
-            update.effective_chat.id, update.message.from_user.username, update.message.text)
+            update.effective_chat.id, update.callback_query.from_user.username, update.callback_query.message.text)
         requests.post(url, headers=headers, data=analytics)
 
         for attrs in jsonobj:
@@ -105,10 +104,6 @@ def get_location(bot, update, type,userLat,userLong):
             dist.append(d)
             i += 1
 
-
-
-
-    print(update)
     sortedDist = sorted(dist, key = lambda el: el[0])
     msg = 'Your closest {0} station is {1}. Tap on the map below for directions.'.format(type, sortedDist[0][1])
     bot.send_message(chat_id=update.effective_chat.id, text= msg)
