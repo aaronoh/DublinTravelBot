@@ -20,13 +20,6 @@ def callback_direction(bot, update):
     print(data)
 
 def getTrain(bot, update, userStation):
-    url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=incoming&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
-    url = 'https://api.botanalytics.co/v1/messages/generic/'
-    headers = {'Content-Type': 'application/json', 'Authorization': '89725dfb6c81667d4b84a22f460abe00dc61007c'}
-    data = '{"is_sender_bot": false,"user": {"id": "newTestID","name": "TestName"},"message": {"timestamp": 1517941019 ,"text": "TestMessage"}}'
-    r = requests.post(url, headers=headers, data=data)
-    print(r)
-
     directions =['north','south','northbound','southbound','n','s']
     user_d =''
     text = update.message.text.split()
@@ -56,6 +49,10 @@ def fetch_train(bot, update, userStation,direction):
     jsonstr = json.dumps(dict)
     jsonobj = json.loads(jsonstr)
     print(url, direction)
+    url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=incoming&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
+    headers = {'Content-Type': 'application/json'}
+    analytics = '{{"text": "{2}", "userId": "{0}", "platformJson":{{"userName": "{1}","Action": "Fetch Train"}}}}'.format(update.effective_chat.id, update.message.from_user.username,update.message.text)
+    requests.post(url, headers=headers, data=analytics)
     # global array, set to empty at each call (new search)
     global trains
     trains = []
@@ -80,11 +77,17 @@ def fetch_train(bot, update, userStation,direction):
         dir = (trains[0]["Direction"])
 
         print(dueIn,stationName,destination,dir)
-
         # Return worthwhile string to user
-        bot.send_message(chat_id=update.effective_chat.id, text=
-            "The next {0} train to service the {1} station is heading for {2}, it's due in {3} minutes.".format(
-                dir, stationName, destination, dueIn))
+        msg = "The next {0} train to service the {1} station is heading for {2}, it's due in {3} minutes.".format(
+                dir, stationName, destination, dueIn)
+        bot.send_message(chat_id=update.effective_chat.id, text=msg)
+
+        url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=outgoing&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
+        headers = {'Content-Type': 'application/json'}
+        analytics = '{{"text": "{0}", "userId": "DublinTravelBot", "platformJson":{{"userName": "DublinTravelBot","Action": "Fetch train Reply"}}}}'.format(
+            msg)
+        requests.post(url, headers=headers, data=analytics)
+
 
         # Setting global var station name to the name of the station just searched for
         global myDirection

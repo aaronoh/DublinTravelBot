@@ -68,6 +68,12 @@ def get_location(bot, update, type,userLat,userLong):
         jsonstr = json.dumps(dict)
         jsonobj = json.loads(jsonstr)
 
+        url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=incoming&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
+        headers = {'Content-Type': 'application/json'}
+        analytics = '{{"text": "{2}", "userId": "{0}", "platformJson":{{"userName": "{1}","Action": "Get Train Location"}}}}'.format(
+            update.effective_chat.id, update.message.from_user.username, update.message.text)
+        requests.post(url, headers=headers, data=analytics)
+
         for attrs in jsonobj["ArrayOfObjStation"]["objStation"]:
             # add the stationdesc attribute to the string list_of_stations
             x = (attrs['StationDesc'], attrs['StationLatitude'], attrs['StationLongitude'])
@@ -82,6 +88,12 @@ def get_location(bot, update, type,userLat,userLong):
     if type == 'bike':
         jsonstr = requests.get('https://api.jcdecaux.com/vls/v1/stations?contract=dublin&apiKey=2eb0463a8d6feabf397cf5babdc21d4e764701a9')
         jsonobj = (jsonstr.json())
+
+        url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=incoming&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
+        headers = {'Content-Type': 'application/json'}
+        analytics = '{{"text": "{2}", "userId": "{0}", "platformJson":{{"userName": "{1}","Action": "Get Bike Location"}}}}'.format(
+            update.effective_chat.id, update.message.from_user.username, update.message.text)
+        requests.post(url, headers=headers, data=analytics)
 
         for attrs in jsonobj:
             x = (attrs['address'],attrs['position']['lat'],attrs['position']['lng'])
@@ -98,6 +110,11 @@ def get_location(bot, update, type,userLat,userLong):
 
     print(update)
     sortedDist = sorted(dist, key = lambda el: el[0])
-    bot.send_message(chat_id=update.effective_chat.id, text='Your closest {0} station is {1}. Tap on the map below '
-                                                            'for directions.'.format(type, sortedDist[0][1]))
+    msg = 'Your closest {0} station is {1}. Tap on the map below for directions.'.format(type, sortedDist[0][1])
+    bot.send_message(chat_id=update.effective_chat.id, text= msg)
     bot.sendLocation(update.effective_chat.id, latitude=sortedDist[0][2], longitude=sortedDist[0][3], live_period=600);
+    url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=outgoing&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
+    headers = {'Content-Type': 'application/json'}
+    analytics = '{{"text": "{0}", "userId": "DublinTravelBot", "platformJson":{{"userName": "DublinTravelBot",' \
+                '"Action": "Get location reply"}}}}'.format(msg)
+    requests.post(url, headers=headers, data=analytics)

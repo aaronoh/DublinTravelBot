@@ -77,23 +77,38 @@ for b in bikeStations:
         ("Are there any bikes available at the {0} station".format(b), {
             'entities': [(35, 35 + len(b), 'BIKE')]
         }),
+        ("Are there any stands available at the {0} station".format(b), {
+            'entities': [(36, 36 + len(b), 'BIKE')]
+        }),
         ("Bikes {0}".format(b), {
             'entities': [(6, 6 + len(b), 'BIKE')]
+        }),
+        ("Stands {0}".format(b), {
+            'entities': [(7, 7 + len(b), 'BIKE')]
         }),
         ("bike {0}".format(b), {
             'entities': [(5, 5 + len(b), 'BIKE')]
         }),
+        ("stand {0}".format(b), {
+            'entities': [(6, 6 + len(b), 'BIKE')]
+        }),
         ("Any bikes at {0}?".format(b), {
             'entities': [(13, 13 + len(b), 'BIKE')]
         }),
-        ("Can I get a bike at {0} station?".format(b), {
-            'entities': [(19, 19 + len(b), 'BIKE')]
+        ("Any stands at {0}?".format(b), {
+            'entities': [(14, 14 + len(b), 'BIKE')]
         }),
         ("Can I get a bike at {0} station?".format(b), {
             'entities': [(19, 19 + len(b), 'BIKE')]
+        }),
+        ("Can I get a stand at {0} station?".format(b), {
+            'entities': [(20, 20 + len(b), 'BIKE')]
         }),
         ("Free bike at {0}?".format(b), {
             'entities': [(13, 13 + len(b), 'BIKE')]
+        }),
+        ("Free stand at {0}?".format(b), {
+            'entities': [(14, 14 + len(b), 'BIKE')]
         }),
         ("Where is {0}?".format(b), {
             'entities': [(9, 9+len(b), 'BIKE')]

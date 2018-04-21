@@ -5,6 +5,11 @@ from tracery.modifiers import base_english
 
 
 def greeting(bot, update):
+    url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=incoming&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
+    headers = {'Content-Type': 'application/json'}
+    analytics = '{{"text": "{2}", "userId": "{0}", "platformJson":{{"userName": "{1}","Action": "Greeting"}}}}'.format(
+        update.effective_chat.id, update.message.from_user.username, update.message.text)
+    requests.post(url, headers=headers, data=analytics)
     def realGreet(greet):
         rules = {
             'origin': '#hello.capitalize#',
@@ -26,3 +31,8 @@ def greeting(bot, update):
                        "Use /start to see this information again".format(x,str(update.message.from_user.username))
 
     update.message.reply_text(greeting_message)
+    url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=outgoing&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
+    headers = {'Content-Type': 'application/json'}
+    analytics = '{{"text": "{0}", "userId": "DublinTravelBot", "platformJson":{{"userName": "DublinTravelBot","Action": "Greeting"}}}}'.format(
+        greeting_message)
+    requests.post(url, headers=headers, data=analytics)

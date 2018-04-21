@@ -3,12 +3,11 @@ import nltk
 import time
 
 def showBike(bot, update, userStation):
-    # url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=incoming&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
-    # url = 'https://api.botanalytics.co/v1/messages/generic/'
-    # headers = {'Content-Type': 'application/json', 'Authorization': '89725dfb6c81667d4b84a22f460abe00dc61007c'}
-    # data = '{"is_sender_bot": false,"user": {"id": "newTestID","name": "TestName"},"message": {"timestamp": 1517941019 ,"text": "TestMessage"}}'
-    # r = requests.post(url, headers=headers, data=data)
-    # print(r)
+    url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=incoming&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
+    headers = {'Content-Type': 'application/json'}
+    analytics = '{{"text": "{2}", "userId": "{0}", "platformJson":{{"userName": "{1}","Action": "Show bike station"}}}}'.format(
+        update.effective_chat.id, update.message.from_user.username, update.message.text)
+    requests.post(url, headers=headers, data=analytics)
 
 
     jsonstr = requests.get(
@@ -38,6 +37,13 @@ def showBike(bot, update, userStation):
 
     print(lat,lng)
 
-    update.message.reply_text("See map below for directions to the {0} station.".format(user_station))
+    msg = "See map below for directions to the {0} station.".format(user_station)
+    update.message.reply_text(msg)
     # Send a map to the user - retrieve the chat id from the original function call and use the lat/lng vars set above
     bot.sendLocation(update.effective_chat.id, latitude=lat, longitude=lng, live_period=600);
+
+    url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=outgoing&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
+    headers = {'Content-Type': 'application/json'}
+    analytics = '{{"text": "{0}", "userId": "DublinTravelBot", "platformJson":{{"userName": "DublinTravelBot",' \
+                '"Action": "Show bike station"}}}}'.format(msg)
+    requests.post(url, headers=headers, data=analytics)
