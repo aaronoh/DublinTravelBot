@@ -97,10 +97,10 @@ def train(bot, update):
 
     #Attributes are case sensitive - account for that
     if direction.lower() == "northbound" or direction.lower() == "north" or direction.lower() == "n":
-        direction = ['To Malahide', 'To Howth', 'northbound']
+        direction = "Northbound"
 
     elif direction.lower() == "southbound" or direction.lower() == "south" or direction.lower() == "s":
-        direction = ['To Bray', 'To Greystones', 'southbound']
+        direction = "Southbound"
 
     url = 'http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByNameXML?StationDesc={0}'.format(newStationName)
     #xml -> dict -> json str -> json obj
@@ -117,7 +117,7 @@ def train(bot, update):
         # For every object in the json obj
         for attrs in jsonobj["ArrayOfObjStationData"]["objStationData"]:
             #if the direction matches the requested direction
-            if attrs['Direction'] in (direction[0], direction[1]):
+            if attrs['Direction'] == direction:
                 #add the trains to an array
                 trains.append(attrs)
 
@@ -126,7 +126,7 @@ def train(bot, update):
         dueIn = (trains[0]['Duein'])
         stationName = (trains[0]["Stationfullname"])
         destination = (trains[0]["Destination"])
-        dir = direction[2]
+        dir = (trains[0]["Direction"])
 
         # Return worthwhile string to user
         update.message.reply_text("The next {0} train to service the {1} station is heading for {2}, it's due in {3} minutes.".format(dir,stationName,destination,dueIn))

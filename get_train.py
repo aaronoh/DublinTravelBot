@@ -34,11 +34,9 @@ def getTrain(bot, update, userStation):
         return
 
     elif user_d in ('north','northbound','n','nth'):
-        print('A')
         direction = 'Northbound'
 
     elif user_d in ('south', 'southbound', 's', 'sth'):
-        print('B')
         direction = 'Southbound'
 
     fetch_train(bot, update, userStation,direction)
@@ -68,13 +66,7 @@ def fetch_train(bot, update, userStation,direction):
         for attrs in jsonobj["ArrayOfObjStationData"]["objStationData"]:
             # if the direction matches the requested direction
             print(attrs)
-            if direction == 'Northbound':
-                direction = ['To Malahide', 'To Howth', 'northbound']
-
-            elif direction == 'Southbound':
-                direction = ['To Bray', 'To Greystones','southbound']
-
-            if attrs['Direction']in (direction[0], direction[1]):
+            if attrs['Direction'] == direction:
                 # add the trains to an array
                 trains.append(attrs)
 
@@ -85,7 +77,7 @@ def fetch_train(bot, update, userStation,direction):
         stationName = (trains[0]["Stationfullname"])
         destination = (trains[0]["Destination"])
 
-        dir = direction[2]
+        dir = (trains[0]["Direction"])
 
         print(dueIn,stationName,destination,dir)
         # Return worthwhile string to user
