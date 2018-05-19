@@ -70,6 +70,13 @@ def fetch_train(bot, update, userStation,direction):
                 # add the trains to an array
                 trains.append(attrs)
 
+        if not trains:
+            print(trains)
+            bot.send_message(chat_id=update.effective_chat.id, text=
+            "There are no trains travelling {0} due at the {1} station within the next 90 minutes, or the {1} station cannot be found. Please try again later. ".format(
+                direction, userStation))
+            return;
+
         # Pull out specific elements of the first element in the array -
         #  reworked to use this array to allow the user to search for additional trains servicing the same station
         # e.g Train due in 2 mins, user may be more interested in the next train - Show them [1] instead of [0]
@@ -100,12 +107,6 @@ def fetch_train(bot, update, userStation,direction):
         print(myStation)
         print(myDirection)
 
-        if not trains:
-            print(trains)
-            bot.send_message(chat_id=update.effective_chat.id, text=
-                "There are no trains travelling {0} due at the {1} station within the next 90 minutes, or the {1} station cannot be found. Please try again later. ".format(
-                    direction, userStation))
-            return;
 
     except:
         print(jsonobj)
