@@ -42,4 +42,3 @@ def getBike(bot, update):
     headers = {'Content-Type': 'application/json'}
     analytics = '{{"text": "{0}", "userId": "DublinTravelBot", "platformJson":{{"userName": "DublinTravelBot","Action": "GetBike Command Reply"}}}}'.format(msg)
     r = requests.post(url, headers=headers, data=analytics)
-    print('B',r)

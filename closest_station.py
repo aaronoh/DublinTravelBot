@@ -44,7 +44,6 @@ def get_closest_station(bot, update):
         user_d = data[0]
         data.pop(0)
         userStation = ' '.join(data)
-        print(userStation, user_d)
         fetch_train(bot, update,userStation, user_d)
 
 

@@ -128,7 +128,7 @@ def classify_message(bot,update):
         print(ent.text)
         NERStation = (ent.text)
 
-    print(NERStation)
+
     if NERStation == '':
         update.message.reply_text("Sorry! I couldn't identify the station you're looking for. Please try again, use /list if you're unsure of the station name.")
         return
@@ -147,7 +147,6 @@ def classify_message(bot,update):
                     comps.append(components)
         #convert comps to a sting seperated by spaces -> ner+spell corrected name
         userStation = " ".join(comps)
-        print('sdfdsfdsdfsfdsfds', userStation)
 
     elif platform == 'DBIKES':
         comps = []

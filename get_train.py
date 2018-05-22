@@ -17,7 +17,6 @@ def determine_direction(bot, update, userStation):
 def callback_direction(bot, update):
     query = update.callback_query
     data = query.data.split()
-    print(data)
 
 def getTrain(bot, update, userStation):
     directions =['north','south','northbound','southbound','n','s']
@@ -49,8 +48,6 @@ def fetch_train(bot, update, userStation,direction):
     dict = xmltodict.parse(xml.content)
     jsonstr = json.dumps(dict)
     jsonobj = json.loads(jsonstr)
-    print(apiurl, direction)
-    print('sdfoksdlf',update)
     url = 'https://tracker.dashbot.io/track?platform=generic&v=9.4.0-rest&type=incoming&apiKey=GNBzfWCO7HSzfsLvNqImagfhBES8d7a1ZLlQQW59'
     headers = {'Content-Type': 'application/json'}
     analytics = '{{"text": "Direction: {1} Station: {2} ", "userId": "{0}", "platformJson":{{Action": "Fetch Train"}}}}'.format(update.effective_chat.id, direction, userStation)
@@ -65,7 +62,6 @@ def fetch_train(bot, update, userStation,direction):
         # For every object in the json obj
         for attrs in jsonobj["ArrayOfObjStationData"]["objStationData"]:
             # if the direction matches the requested direction
-            print(attrs)
             if attrs['Direction'] == direction:
                 # add the trains to an array
                 trains.append(attrs)
@@ -85,8 +81,6 @@ def fetch_train(bot, update, userStation,direction):
         destination = (trains[0]["Destination"])
 
         dir = (trains[0]["Direction"])
-
-        print(dueIn,stationName,destination,dir)
         # Return worthwhile string to user
         msg = "The next {0} train to service the {1} station is heading for {2}, it's due in {3} minutes.".format(
                 dir, stationName, destination, dueIn)
@@ -103,9 +97,7 @@ def fetch_train(bot, update, userStation,direction):
         global myDirection
         myDirection = dir
         myStation = (jsonobj["ArrayOfObjStationData"]["objStationData"][0]["Stationfullname"])
-        print(userStation)
-        print(myStation)
-        print(myDirection)
+
 
 
     except:

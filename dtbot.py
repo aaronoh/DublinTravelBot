@@ -30,9 +30,6 @@ class FilterTrain(BaseFilter):
         #return 'train' in message.text.lower()
         #any(text.lower() in message.text.lower() for text in ('Foo', 'Bar'))
 
-class FilterNext(BaseFilter):
-    def filter(self, message):
-        return 'next one' in message.text.lower()
 
 class FilterBike(BaseFilter):
     def filter(self, message):
@@ -41,7 +38,6 @@ class FilterBike(BaseFilter):
 # Initialize filter class.
 filter_train = FilterTrain()
 filter_bike = FilterBike()
-filter_next = FilterNext()
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -152,7 +148,7 @@ def train(bot, update):
 
 
 
-
+#NOT CURRENTLY IN USE
 def nextTrain(bot, update):
     #i used to keep track of train pos being searched, incremented each time this function is called and reset when a new search is made
     global i
@@ -169,32 +165,6 @@ def nextTrain(bot, update):
 
     except:
         update.message.reply_text('There are no further {0} trains servicing the {1} station within the next 90 minutes. Please try again later.'.format(myDirection, myStation))
-def showme(bot, update):
-    #retrieves global station name
-    global myStation
-
-    #Poll api again - using the station info endpoint as this is the only way of getting their lat/long
-    # xml -> dict -> json str -> json obj
-    url = 'http://api.irishrail.ie/realtime/realtime.asmx/getAllStationsXML_WithStationType?StationType=D'
-    xml = requests.get(url)
-    dict = xmltodict.parse(xml.content)
-    jsonstr = json.dumps(dict)
-    jsonobj = json.loads(jsonstr)
-
-    # For every object in the json obj
-    for attrs in jsonobj["ArrayOfObjStation"]["objStation"]:
-        #if the station name attribute matches the global var station name
-        if attrs['StationDesc'] == myStation:
-            #lat/long vars = the lat/long attributes associated with that object
-            lat = attrs['StationLatitude']
-            long = attrs['StationLongitude']
-            #Once its' matched one, break out of the for loop
-            break
-    #Return a worhtwhile string to the user using the above information
-    update.message.reply_text("See map below for directions to the {0} station.".format(myStation))
-
-    #Send a map to the user - retrieve the chat id from the original function call and use the lat/lng vars set above
-    bot.sendLocation(update.effective_chat.id, latitude=lat, longitude=long, live_period=600);
 
 def liststations(bot, update):
     # Poll api again - using the station info endpoint
@@ -247,7 +217,6 @@ def main():
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
     # when a message contains a defined command (/showm -> run the showme function)
-    dp.add_handler(CommandHandler("showme", showme))
     dp.add_handler(CommandHandler("list", liststations))
     dp.add_handler(CommandHandler("listbikes", listbikes))
     dp.add_handler(CommandHandler("start", greeting))
@@ -258,7 +227,6 @@ def main():
     dp.add_handler(MessageHandler(Filters.location,station_type))
     dp.add_handler(MessageHandler(filter_train, train))
     dp.add_handler(MessageHandler(filter_bike, getBike))
-    dp.add_handler(MessageHandler(filter_next, nextTrain))
     # test handler - when a message that contains text is received - trigger the echo function
     dp.add_handler(MessageHandler(Filters.text, classify_message))
 
