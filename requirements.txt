@@ -4,7 +4,7 @@ chardet==2.3.0
 cloud-init==0.7.9
 command-not-found==0.3
 configobj==5.0.6
-cryptography==1.2.3
+cryptography==3.2
 future==0.16.0
 gpxpy==1.1.2
 idna==2.0
