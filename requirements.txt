@@ -8,7 +8,7 @@ cryptography==1.2.3
 future==0.16.0
 gpxpy==1.1.2
 idna==2.0
-Jinja2==2.8
+Jinja2==2.11.3
 jsonpatch==1.10
 jsonpointer==1.9
 language-selector==0.1
